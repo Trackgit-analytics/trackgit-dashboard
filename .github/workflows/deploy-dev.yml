@@ -1,0 +1,22 @@
+name: Firebase CD
+
+on:
+  push:
+    branches: [ dev ]
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: 12
+      - run: npm install
+      - run: npm run build
+      - uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting:dev-dashboard-trackgit
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

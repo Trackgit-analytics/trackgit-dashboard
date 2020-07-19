@@ -3,7 +3,7 @@ enum FormTypes {
   /** for the login page */
   login = "login",
   /** for the register page */
-  register = "register",
+  register = "register"
 }
 
 export default FormTypes;

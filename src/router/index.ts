@@ -11,28 +11,28 @@ const routes: Array<RouteConfig> = [
     path: "/",
     name: "Dashboard",
     meta: PageMeta.Dashboard,
-    component: Dashboard,
+    component: Dashboard
   },
   {
     path: "/login/:redirectUrl?",
     name: "Login",
     meta: PageMeta.Login,
     props: { formType: FormTypes.login },
-    component: () => import("@/views/Accounts.vue"),
+    component: () => import("@/views/Accounts.vue")
   },
   {
     path: "/register/:redirectUrl?",
     name: "Register",
     meta: PageMeta.Register,
     props: { formType: FormTypes.register },
-    component: () => import("@/views/Accounts.vue"),
-  },
+    component: () => import("@/views/Accounts.vue")
+  }
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes,
+  routes
 });
 
 /**
@@ -43,17 +43,17 @@ router.beforeEach((to, from, next) => {
   const nearestWithTitle = to.matched
     .slice()
     .reverse()
-    .find((r) => r.meta && r.meta.title);
+    .find(r => r.meta && r.meta.title);
   const nearestWithMeta = to.matched
     .slice()
     .reverse()
-    .find((r) => r.meta && r.meta.metaTags);
+    .find(r => r.meta && r.meta.metaTags);
 
   if (nearestWithTitle) document.title = nearestWithTitle.meta.title;
 
   Array.from(
     document.querySelectorAll("[data-vue-router-controlled]")
-  ).map((el) => el.parentNode?.removeChild(el));
+  ).map(el => el.parentNode?.removeChild(el));
 
   if (!nearestWithMeta) return next();
 
@@ -61,7 +61,7 @@ router.beforeEach((to, from, next) => {
     .map((tagDef: any) => {
       const tag = document.createElement("meta");
 
-      Object.keys(tagDef).forEach((key) => {
+      Object.keys(tagDef).forEach(key => {
         tag.setAttribute(key, tagDef[key]);
       });
 

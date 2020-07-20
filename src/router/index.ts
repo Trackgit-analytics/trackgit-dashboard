@@ -10,6 +10,7 @@ const routes: Array<RouteConfig> = [
   {
     path: "/",
     name: "Dashboard",
+    props: { activeToken: "" },
     meta: PageMeta.Dashboard,
     component: Dashboard
   },
@@ -26,6 +27,13 @@ const routes: Array<RouteConfig> = [
     meta: PageMeta.Register,
     props: { formType: FormTypes.register },
     component: () => import("@/views/Accounts.vue")
+  },
+  {
+    path: "/token/:activeToken?",
+    name: "Dashboard",
+    props: true,
+    meta: PageMeta.Dashboard,
+    component: Dashboard
   }
 ];
 

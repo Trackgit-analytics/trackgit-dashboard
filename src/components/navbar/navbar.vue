@@ -1,12 +1,11 @@
 <template>
   <nav class="navbar">
-    <a href="#" class="navbar-brand ml-10 ml-sm-20 logo">
-      <img
-        src="@/assets/logo.svg"
-        class="d-none d-md-block d-lg-block d-xl-block"
-      />
-      trackgit
-    </a>
+    <div class="navbar-content d-block d-none d-sm-block d-md-none">
+      <button class="btn btn-action" type="button" @click="toggleSidebar()">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+        <span class="sr-only">Toggle sidebar</span>
+      </button>
+    </div>
     <div class="navbar-content ml-auto">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown with-arrow">
@@ -38,17 +37,13 @@
       >
         <i class="fa fa-moon-o" aria-hidden="true"></i>
       </button>
-      <a :href="Hyperlinks.donate" class="btn btn-primary" role="button">
-        Donate
-        <i class="fa fa-heart-o" aria-hidden="true"></i>
-      </a>
     </div>
   </nav>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import { Hyperlinks } from "@/models/data/LinkDirectory.ts";
+import SidebarModule from "@/store/modules/SidebarModule";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const halfmoon = require("halfmoon");
@@ -61,9 +56,8 @@ export default class Navbar extends Vue {
     };
   }
 
-  /** All hyperlinks for project */
-  get Hyperlinks() {
-    return Hyperlinks;
+  toggleSidebar() {
+    SidebarModule.updateSidebarVisibility(!SidebarModule.isOpen);
   }
 }
 </script>

@@ -42,6 +42,14 @@ export default class App extends Vue {
       } else {
         Halfmoon.toggleModal("login");
       }
+    } else if (UserModule.isUserAuthenticated === true) {
+      const currentPath = this.$router.currentRoute.path;
+      if (
+        currentPath.includes(FormTypes.login) ||
+        currentPath.includes(FormTypes.register)
+      ) {
+        this.$router.replace({ path: "/" });
+      }
     }
   }
 

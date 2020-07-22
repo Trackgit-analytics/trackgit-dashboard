@@ -1,8 +1,8 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import Dashboard from "@/views/Dashboard.vue";
-import FormTypes from "@/models/data/FormTypes";
 import PageMeta from "@/models/data/PageMeta";
+import FormTypes from "@/models/data/FormTypes";
 
 Vue.use(VueRouter);
 
@@ -10,29 +10,27 @@ const routes: Array<RouteConfig> = [
   {
     path: "/",
     name: "Dashboard",
-    props: { activeToken: "" },
-    meta: PageMeta.Dashboard,
-    component: Dashboard
-  },
-  {
-    path: `/${FormTypes.login}`,
-    name: "Dashboard",
-    props: { activeToken: "" },
-    meta: PageMeta.Dashboard,
-    component: Dashboard
-  },
-  {
-    path: `/${FormTypes.register}`,
-    name: "Dashboard",
-    props: { activeToken: "" },
+    props: true,
     meta: PageMeta.Dashboard,
     component: Dashboard
   },
   {
     path: "/token/:activeToken?",
-    name: "Dashboard",
+    name: "Dashboard-token",
     props: true,
     meta: PageMeta.Dashboard,
+    component: Dashboard
+  },
+  {
+    path: `/${FormTypes.login}`,
+    name: "Login",
+    meta: PageMeta.Login,
+    component: Dashboard
+  },
+  {
+    path: `/${FormTypes.register}`,
+    name: "Register",
+    meta: PageMeta.Register,
     component: Dashboard
   }
 ];

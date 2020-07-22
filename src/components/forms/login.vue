@@ -14,10 +14,10 @@
         </h5>
         <form id="login-form">
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="login-email">Email</label>
             <input
               type="email"
-              id="email"
+              id="login-email"
               class="form-control"
               placeholder="Email"
               required="required"
@@ -26,10 +26,10 @@
             />
           </div>
           <div class="form-group">
-            <label for="password">Password</label>
+            <label for="login-password">Password</label>
             <input
               type="password"
-              id="password"
+              id="login-password"
               class="form-control"
               placeholder="Password"
               required="required"
@@ -70,6 +70,7 @@ import UserHelper from "@/helpers/UserHelper";
 @Component({ components: { Spinner } })
 export default class LoginForm extends Vue {
   loading = false;
+  redirectUrl = "/";
 
   email = "";
   password = "";
@@ -99,7 +100,9 @@ export default class LoginForm extends Vue {
     if (!loginStatus.isSuccessful) {
       this.errorMessage = "\nLogin attempt failed. Please try again.";
     } else {
-      this.$router.replace({ path: "/" });
+      if (this.$router.currentRoute.path !== this.redirectUrl) {
+        this.$router.replace({ path: this.redirectUrl });
+      }
     }
     this.loading = false;
   }

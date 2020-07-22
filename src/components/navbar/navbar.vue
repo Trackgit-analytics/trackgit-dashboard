@@ -35,7 +35,7 @@
         @click="toggleDarkMode"
         aria-label="Toggle dark mode"
       >
-        <i class="fa fa-moon-o" aria-hidden="true"></i>
+        <i class="fa fa-moon-o" aria-hidden="true" />
       </button>
 
       <UserInfoNavbar />

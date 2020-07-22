@@ -15,9 +15,9 @@
           {{ userName }}
           <span class="font-size-14 font-weight-normal">{{ userEmail }}</span>
         </h6>
-        <a :href="accountSettingsLink" class="dropdown-item"
-          >Account settings</a
-        >
+        <a :href="accountSettingsLink" class="dropdown-item">
+          Account settings
+        </a>
         <div class="dropdown-divider"></div>
         <div class="dropdown-content">
           <button

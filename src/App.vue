@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <div class="sticky-alerts" />
     <router-view />
   </div>
 </template>
@@ -10,16 +9,14 @@ import FirebaseModule from "./store/modules/FirebaseModule";
 import UserModule from "./store/modules/UserModule";
 import UserHelper from "@/helpers/UserHelper";
 import FormTypes from "./models/data/FormTypes";
+import Halfmoon from "@/helpers/Halfmoon.ts";
 
-// halfmoon doesn't support TS yet
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const halfmoon = require("halfmoon");
 require("halfmoon/css/halfmoon.min.css");
 
 @Component
 export default class App extends Vue {
   async mounted() {
-    halfmoon.onDOMContentLoaded();
+    Halfmoon.init();
     this.fixViewport();
 
     await FirebaseModule.initializeApp();
@@ -35,15 +32,15 @@ export default class App extends Vue {
   async setAuthPrompts() {
     if (UserModule.isUserAuthenticated === false) {
       if (this.$router.currentRoute.path.indexOf(FormTypes.login) != -1) {
-        halfmoon.toggleModal("login");
+        Halfmoon.toggleModal("login");
       } else if (
         this.$router.currentRoute.path.indexOf(FormTypes.register) != -1
       ) {
-        halfmoon.toggleModal("register");
+        Halfmoon.toggleModal("register");
       } else if (UserHelper.isFirstTime()) {
-        halfmoon.toggleModal("register");
+        Halfmoon.toggleModal("register");
       } else {
-        halfmoon.toggleModal("login");
+        Halfmoon.toggleModal("login");
       }
     }
   }

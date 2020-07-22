@@ -32,7 +32,7 @@
       <button
         class="btn btn-action mr-5"
         type="button"
-        @click="halfmoon.toggleDarkMode()"
+        @click="toggleDarkMode"
         aria-label="Toggle dark mode"
       >
         <i class="fa fa-moon-o" aria-hidden="true"></i>
@@ -47,20 +47,16 @@
 import { Vue, Component } from "vue-property-decorator";
 import SidebarModule from "@/store/modules/SidebarModule";
 import UserInfoNavbar from "@/components/user-info-navbar/user-info-navbar.vue";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const halfmoon = require("halfmoon");
+import Halfmoon from "@/helpers/Halfmoon";
 
 @Component({ components: { UserInfoNavbar } })
 export default class Navbar extends Vue {
-  data() {
-    return {
-      halfmoon
-    };
-  }
-
   toggleSidebar() {
     SidebarModule.updateSidebarVisibility(!SidebarModule.isOpen);
+  }
+
+  toggleDarkMode() {
+    Halfmoon.toggleDarkMode();
   }
 }
 </script>

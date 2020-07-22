@@ -36,6 +36,10 @@ import { Vue, Component } from "vue-property-decorator";
 import UserModule from "@/store/modules/UserModule";
 import { Hyperlinks } from "@/models/data/LinkDirectory";
 import UserHelper from "@/helpers/UserHelper";
+import Halfmoon, {
+  HalfmoonAlertType,
+  HalfmoonFillType
+} from "@/helpers/Halfmoon";
 
 @Component
 export default class UserInfoNavbar extends Vue {
@@ -76,6 +80,12 @@ export default class UserInfoNavbar extends Vue {
     if (actionStatus.isSuccessful) {
       // refresh the page if the user is signed out successfully
       this.$router.go(0);
+    } else {
+      Halfmoon.toast({
+        content: "Couldn't sign you out. Please try again.",
+        alertType: HalfmoonAlertType.danger,
+        fillType: HalfmoonFillType.filled
+      });
     }
   }
 }

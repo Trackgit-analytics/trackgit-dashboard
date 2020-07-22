@@ -10,7 +10,6 @@ import firebase from "firebase";
 import "firebase/auth";
 import "firebase/firestore";
 import FirebaseConfig from "@/models/data/FirebaseConfig";
-import UserModule from "./UserModule";
 import UserHelper from "@/helpers/UserHelper";
 
 @Module({ dynamic: true, namespaced: true, store, name: "FirebaseModule" })

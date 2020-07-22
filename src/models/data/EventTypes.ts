@@ -1,6 +1,7 @@
 /** Event types for different cases */
 enum EventTypes {
   login = "login",
+  logout = "logout",
   signUp = "registration",
   updateProfile = "update-profile",
   userVerificationEmail = "verification-email-send",

@@ -51,6 +51,29 @@ export default class UserHelper {
   }
 
   /**
+   * Sign out the currently logged in user
+   * @returns An ActionStatus object which indicates whether the action succeeded
+   */
+  public static async signOut(): Promise<ActionStatus> {
+    const actionStatus: ActionStatus = {
+      isSuccessful: true
+    };
+
+    await FirebaseModule.auth?.signOut().catch(error => {
+      actionStatus.isSuccessful = false;
+      actionStatus.message = error.message;
+      FirebaseModule.analytics?.logEvent(LogTypes.error, {
+        category: LogCategories.auth,
+        user: FirebaseModule.auth?.currentUser?.uid,
+        event: EventTypes.logout,
+        error
+      });
+    });
+
+    return actionStatus;
+  }
+
+  /**
    * Create a new user into firebase
    * @param name The user's full name
    * @param email The user's email

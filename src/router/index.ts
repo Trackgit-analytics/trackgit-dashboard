@@ -15,20 +15,6 @@ const routes: Array<RouteConfig> = [
     component: Dashboard
   },
   {
-    path: "/login/:redirectUrl?",
-    name: "Login",
-    meta: PageMeta.Login,
-    props: { formType: FormTypes.login },
-    component: () => import("@/views/Accounts.vue")
-  },
-  {
-    path: "/register/:redirectUrl?",
-    name: "Register",
-    meta: PageMeta.Register,
-    props: { formType: FormTypes.register },
-    component: () => import("@/views/Accounts.vue")
-  },
-  {
     path: "/token/:activeToken?",
     name: "Dashboard",
     props: true,

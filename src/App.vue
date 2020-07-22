@@ -50,7 +50,6 @@ html {
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   font-size: 15px;
   height: 100%;
   width: 100%;
@@ -99,6 +98,7 @@ a {
 .navbar {
   border-bottom: 0px;
 }
+
 .content-wrapper {
   top: 0px !important;
   height: 100% !important;
@@ -108,7 +108,17 @@ a {
   background: #25282c;
 }
 
+.dark-mode .modal {
+  background: rgba(0, 0, 0, 0.5);
+}
+
 .opacity-half {
   opacity: 0.5;
+}
+
+@media (max-width: 576px) {
+  .modal-content {
+    max-width: 90%;
+  }
 }
 </style>

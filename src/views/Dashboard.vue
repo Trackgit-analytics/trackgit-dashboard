@@ -4,6 +4,8 @@
     data-sidebar-type="full-height"
     id="dashboard-container"
   >
+    <LoginForm />
+    <RegisterForm />
     <div class="sticky-alerts" />
 
     <Sidebar />
@@ -20,8 +22,10 @@ import Navbar from "@/components/navbar/navbar.vue";
 import Sidebar from "@/components/sidebar/sidebar.vue";
 import SidebarModule from "@/store/modules/SidebarModule.ts";
 import TokenModule from "@/store/modules/TokenModule.ts";
+import LoginForm from "@/components/forms/login.vue";
+import RegisterForm from "@/components/forms/register.vue";
 
-@Component({ components: { Navbar, Sidebar } })
+@Component({ components: { Navbar, Sidebar, LoginForm, RegisterForm } })
 export default class Dashboard extends Vue {
   @Prop({ default: "" }) readonly activeToken!: string;
 

@@ -55,7 +55,7 @@
         </div>
         <br />
         <div class="text-center text-muted font-size-14">
-          Already have an account? <a href="#login">Sign in</a>
+          Already have an account? <a :href="loginLink">Sign in</a>
         </div>
       </div>
     </div>
@@ -71,6 +71,11 @@ export default class RegisterForm extends Vue {
   /** Hyperlink to terms of service page */
   get termsLink() {
     return Hyperlinks.tos;
+  }
+
+  /** Hyperlink to login page */
+  get loginLink() {
+    return Hyperlinks.login;
   }
 }
 </script>

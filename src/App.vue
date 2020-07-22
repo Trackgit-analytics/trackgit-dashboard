@@ -6,6 +6,10 @@
 </template>
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
+import FirebaseModule from "./store/modules/FirebaseModule";
+import UserModule from "./store/modules/UserModule";
+import UserHelper from "@/helpers/UserHelper";
+import FormTypes from "./models/data/FormTypes";
 
 // halfmoon doesn't support TS yet
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -14,9 +18,25 @@ require("halfmoon/css/halfmoon.min.css");
 
 @Component
 export default class App extends Vue {
-  mounted() {
+  async mounted() {
     halfmoon.onDOMContentLoaded();
     this.fixViewport();
+
+    await FirebaseModule.initializeApp();
+
+    if (!UserModule.isUserAuthenticated) {
+      if (this.$router.currentRoute.path.indexOf(FormTypes.login) != -1) {
+        halfmoon.toggleModal("login");
+      } else if (
+        this.$router.currentRoute.path.indexOf(FormTypes.register) != -1
+      ) {
+        halfmoon.toggleModal("register");
+      } else if (UserHelper.isFirstTime()) {
+        halfmoon.toggleModal("register");
+      } else {
+        halfmoon.toggleModal("login");
+      }
+    }
   }
 
   /**

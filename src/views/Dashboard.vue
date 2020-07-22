@@ -4,8 +4,8 @@
     data-sidebar-type="full-height"
     id="dashboard-container"
   >
-    <LoginForm />
-    <RegisterForm />
+    <LoginForm v-if="!isUserAuthenticated" />
+    <RegisterForm v-if="!isUserAuthenticated" />
     <div class="sticky-alerts" />
 
     <Sidebar />
@@ -17,21 +17,29 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import Navbar from "@/components/navbar/navbar.vue";
 import Sidebar from "@/components/sidebar/sidebar.vue";
 import SidebarModule from "@/store/modules/SidebarModule.ts";
 import TokenModule from "@/store/modules/TokenModule.ts";
 import LoginForm from "@/components/forms/login.vue";
 import RegisterForm from "@/components/forms/register.vue";
+import UserModule from "@/store/modules/UserModule";
 
 @Component({ components: { Navbar, Sidebar, LoginForm, RegisterForm } })
 export default class Dashboard extends Vue {
   @Prop({ default: "" }) readonly activeToken!: string;
 
-  async mounted() {
-    await this.fetchAllTokens();
-    this.setActiveTokenFromUrl();
+  get isUserAuthenticated(): boolean {
+    return UserModule.isUserAuthenticated;
+  }
+
+  @Watch("isUserAuthenticated")
+  async getUserData(isAuthenticated: boolean) {
+    if (isAuthenticated) {
+      await this.fetchAllTokens();
+      this.setActiveTokenFromUrl();
+    }
   }
 
   /** Trigger event to get all tokens for user */

@@ -15,6 +15,20 @@ const routes: Array<RouteConfig> = [
     component: Dashboard
   },
   {
+    path: `/${FormTypes.login}`,
+    name: "Dashboard",
+    props: { activeToken: "" },
+    meta: PageMeta.Dashboard,
+    component: Dashboard
+  },
+  {
+    path: `/${FormTypes.register}`,
+    name: "Dashboard",
+    props: { activeToken: "" },
+    meta: PageMeta.Dashboard,
+    component: Dashboard
+  },
+  {
     path: "/token/:activeToken?",
     name: "Dashboard",
     props: true,

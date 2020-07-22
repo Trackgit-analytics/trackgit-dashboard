@@ -44,7 +44,7 @@
         </div>
         <br />
         <div class="text-center text-muted font-size-14">
-          Don't have an account? <a href="#register">Sign up</a>
+          Don't have an account? <a :href="registerLink">Sign up</a>
         </div>
       </div>
     </div>
@@ -60,6 +60,11 @@ export default class LoginForm extends Vue {
   /** Hyperlink to password recovery page */
   get recoverPasswordLink() {
     return Hyperlinks.recoverPassword;
+  }
+
+  /** Hyperlink to register page */
+  get registerLink() {
+    return Hyperlinks.register;
   }
 }
 </script>

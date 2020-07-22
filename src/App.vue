@@ -5,7 +5,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Watch } from "vue-property-decorator";
 import FirebaseModule from "./store/modules/FirebaseModule";
 import UserModule from "./store/modules/UserModule";
 import UserHelper from "@/helpers/UserHelper";
@@ -23,8 +23,17 @@ export default class App extends Vue {
     this.fixViewport();
 
     await FirebaseModule.initializeApp();
+  }
 
-    if (!UserModule.isUserAuthenticated) {
+  /** Gets the current auth status of the user */
+  get isUserAuthenticated() {
+    return UserModule.isUserAuthenticated;
+  }
+
+  /** Show authentication prompts if user is not logged in */
+  @Watch("isUserAuthenticated")
+  async setAuthPrompts() {
+    if (UserModule.isUserAuthenticated === false) {
       if (this.$router.currentRoute.path.indexOf(FormTypes.login) != -1) {
         halfmoon.toggleModal("login");
       } else if (
@@ -134,6 +143,12 @@ a {
 
 .opacity-half {
   opacity: 0.5;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (max-width: 576px) {

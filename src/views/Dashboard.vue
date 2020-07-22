@@ -30,10 +30,12 @@ import UserModule from "@/store/modules/UserModule";
 export default class Dashboard extends Vue {
   @Prop({ default: "" }) readonly activeToken!: string;
 
-  get isUserAuthenticated(): boolean {
+  /** Gets the current auth status of the user */
+  get isUserAuthenticated() {
     return UserModule.isUserAuthenticated;
   }
 
+  /** Get logged in user's data */
   @Watch("isUserAuthenticated")
   async getUserData(isAuthenticated: boolean) {
     if (isAuthenticated) {

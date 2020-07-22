@@ -21,16 +21,20 @@
               class="form-control"
               placeholder="Full name"
               required="required"
+              :disabled="loading"
+              v-model="name"
             />
           </div>
           <div class="form-group">
             <label for="username">Email</label>
             <input
-              type="text"
+              type="email"
               id="username"
               class="form-control"
               placeholder="Email"
               required="required"
+              :disabled="loading"
+              v-model="email"
             />
           </div>
           <div class="form-group">
@@ -41,21 +45,29 @@
               class="form-control"
               placeholder="Password"
               required="required"
+              :disabled="loading"
+              v-model="password"
             />
           </div>
-          <input
-            class="btn btn-primary btn-block"
+          <div
+            :class="`btn btn-primary btn-block ${loading ? 'disabled' : null}`"
             type="submit"
-            value="Sign up for trackgit"
-          />
+            @click="register"
+          >
+            Sign up for trackgit <Spinner v-if="loading" />
+          </div>
         </form>
         <div class="text-muted font-size-12 mt-20">
           By clicking "Sign up for trackgit", you agree to our
           <a :href="termsLink">Terms of Service</a>.
         </div>
+        <div class="font-size-12 text-danger">
+          {{ errorMessage }}
+        </div>
         <br />
         <div class="text-center text-muted font-size-14">
-          Already have an account? <a :href="loginLink">Sign in</a>
+          Already have an account?
+          <a :href="!loading ? loginLink : null">Sign in</a>
         </div>
       </div>
     </div>
@@ -65,9 +77,18 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import { Hyperlinks } from "@/models/data/LinkDirectory.ts";
+import Spinner from "@/components/misc/spinner.vue";
+import UserHelper from "@/helpers/UserHelper";
 
-@Component
+@Component({ components: { Spinner } })
 export default class RegisterForm extends Vue {
+  loading = false;
+
+  name = "";
+  email = "";
+  password = "";
+  errorMessage = "";
+
   /** Hyperlink to terms of service page */
   get termsLink() {
     return Hyperlinks.tos;
@@ -76,6 +97,28 @@ export default class RegisterForm extends Vue {
   /** Hyperlink to login page */
   get loginLink() {
     return Hyperlinks.login;
+  }
+
+  async register() {
+    if (this.loading) {
+      return;
+    }
+
+    const form = document.getElementById("register-form") as HTMLFormElement;
+    if (!form.reportValidity()) {
+      return;
+    }
+    this.loading = true;
+    const loginStatus = await UserHelper.signUp(
+      this.name,
+      this.email,
+      this.password
+    );
+    if (!loginStatus.isSuccessful) {
+      this.errorMessage =
+        "\nYour account couldn't be created. Please try again.";
+    }
+    this.loading = false;
   }
 }
 </script>

@@ -14,7 +14,11 @@ import FirebaseModule from "./FirebaseModule";
 class UserModule extends VuexModule {
   public user: firebase.User | null = null;
 
-  public isUserAuthenticated = false;
+  /**
+   * If the user is logged in returns true, false if the user isn't logged in.
+   * A null status indicates that firebase hasn't initialized yet.
+   */
+  public isUserAuthenticated: boolean | null = null;
 
   @Mutation
   private setUser(user: firebase.User | null) {

@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar" id="sidebar-container">
     <div class="sidebar-menu">
-      <a href="#" class="sidebar-brand logo">
+      <a href="/" class="sidebar-brand logo">
         <img src="@/assets/logo.svg" alt="logo" />
         trackgit
       </a>

@@ -37,6 +37,8 @@
       >
         <i class="fa fa-moon-o" aria-hidden="true"></i>
       </button>
+
+      <UserInfoNavbar />
     </div>
   </nav>
 </template>
@@ -44,11 +46,12 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import SidebarModule from "@/store/modules/SidebarModule";
+import UserInfoNavbar from "@/components/user-info-navbar/user-info-navbar.vue";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const halfmoon = require("halfmoon");
 
-@Component
+@Component({ components: { UserInfoNavbar } })
 export default class Navbar extends Vue {
   data() {
     return {
@@ -62,4 +65,4 @@ export default class Navbar extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped></style>

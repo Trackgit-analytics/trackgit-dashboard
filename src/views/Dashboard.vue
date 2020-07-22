@@ -1,17 +1,20 @@
 <template>
-  <div
-    class="page-wrapper with-navbar with-sidebar"
-    data-sidebar-type="full-height"
-    id="dashboard-container"
-  >
+  <div>
     <LoginForm v-if="!isUserAuthenticated" />
     <RegisterForm v-if="!isUserAuthenticated" />
-    <div class="sticky-alerts" />
 
-    <Sidebar />
+    <div
+      class="page-wrapper with-navbar with-sidebar"
+      data-sidebar-type="full-height"
+      id="dashboard-container"
+    >
+      <div class="sticky-alerts" />
 
-    <div class="content-wrapper" @click="closeSidebar">
-      <Navbar />
+      <Sidebar />
+
+      <div class="content-wrapper" @click="closeSidebar">
+        <Navbar />
+      </div>
     </div>
   </div>
 </template>

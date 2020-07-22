@@ -98,6 +98,8 @@ export default class LoginForm extends Vue {
     const loginStatus = await UserHelper.signIn(this.email, this.password);
     if (!loginStatus.isSuccessful) {
       this.errorMessage = "\nLogin attempt failed. Please try again.";
+    } else {
+      this.$router.replace({ path: "/" });
     }
     this.loading = false;
   }

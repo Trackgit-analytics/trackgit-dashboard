@@ -126,6 +126,7 @@ a {
 
 .navbar {
   border-bottom: 0px;
+  padding: 3.5rem 2rem;
 }
 
 .content-wrapper {
@@ -154,6 +155,10 @@ a {
 @media (max-width: 576px) {
   .modal-content {
     max-width: 90%;
+  }
+
+  .navbar {
+    padding: 3rem 1rem;
   }
 }
 </style>

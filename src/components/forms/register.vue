@@ -117,6 +117,8 @@ export default class RegisterForm extends Vue {
     if (!loginStatus.isSuccessful) {
       this.errorMessage =
         "\nYour account couldn't be created. Please try again.";
+    } else {
+      this.$router.replace({ path: "/" });
     }
     this.loading = false;
   }

@@ -11,19 +11,21 @@
         <img :src="userProfilePhoto" alt="avatar" />
       </button>
       <div class="dropdown-menu dropdown-menu-right">
-        <h6 class="dropdown-header">
+        <h6 class="dropdown-header ">
           {{ userName }}
-          <span class="font-size-12 text-muted font-weight-normal">{{
-            userEmail
-          }}</span>
+          <span class="font-size-14 font-weight-normal">{{ userEmail }}</span>
         </h6>
         <a :href="accountSettingsLink" class="dropdown-item"
           >Account settings</a
         >
         <div class="dropdown-divider"></div>
         <div class="dropdown-content">
-          <button class="btn btn-block" @click="signOut" type="button">
-            Sign out
+          <button
+            :class="`btn btn-block ${loading ? 'disabled' : null}`"
+            @click="signOut"
+            type="button"
+          >
+            Sign out <Spinner v-if="loading" />
           </button>
         </div>
       </div>
@@ -40,9 +42,11 @@ import Halfmoon, {
   HalfmoonAlertType,
   HalfmoonFillType
 } from "@/helpers/Halfmoon";
+import Spinner from "@/components/misc/spinner.vue";
 
-@Component
+@Component({ components: { Spinner } })
 export default class UserInfoNavbar extends Vue {
+  loading = false;
   defaultAvatar = "https://avatars.dicebear.com/api/jdenticon/.svg?r=50&m=17";
 
   /** Returns the user's profile photo url */
@@ -76,6 +80,11 @@ export default class UserInfoNavbar extends Vue {
 
   /** Sign out the currently logged in user */
   async signOut() {
+    if (this.loading) {
+      return;
+    }
+
+    this.loading = true;
     const actionStatus = await UserHelper.signOut();
     if (actionStatus.isSuccessful) {
       // refresh the page if the user is signed out successfully
@@ -87,6 +96,7 @@ export default class UserInfoNavbar extends Vue {
         fillType: HalfmoonFillType.filled
       });
     }
+    this.loading = false;
   }
 }
 </script>

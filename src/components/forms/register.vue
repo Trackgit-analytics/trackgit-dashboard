@@ -12,7 +12,7 @@
         <h5 class="modal-title text-muted font-weight-bold font-size-16">
           Create a new account
         </h5>
-        <form id="register-form">
+        <form v-on:submit.prevent="register">
           <div class="form-group">
             <label for="register-name">Name</label>
             <input
@@ -49,13 +49,12 @@
               v-model="password"
             />
           </div>
-          <div
+          <button
             :class="`btn btn-primary btn-block ${loading ? 'disabled' : null}`"
             type="submit"
-            @click="register"
           >
             Sign up for trackgit <Spinner v-if="loading" />
-          </div>
+          </button>
         </form>
         <div class="text-muted font-size-12 mt-20">
           By clicking "Sign up for trackgit", you agree to our
@@ -105,10 +104,6 @@ export default class RegisterForm extends Vue {
       return;
     }
 
-    const form = document.getElementById("register-form") as HTMLFormElement;
-    if (!form.reportValidity()) {
-      return;
-    }
     this.loading = true;
     const loginStatus = await UserHelper.signUp(
       this.name,

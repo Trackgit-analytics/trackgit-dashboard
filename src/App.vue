@@ -157,6 +157,10 @@ a {
   align-items: center;
 }
 
+.modal {
+  transition: top 0ms !important;
+}
+
 @media (max-width: 576px) {
   .modal-content {
     max-width: 90%;

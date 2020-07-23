@@ -12,7 +12,7 @@
         <h5 class="modal-title text-muted font-weight-bold font-size-16">
           Sign into your account
         </h5>
-        <form id="login-form">
+        <form v-on:submit.prevent="login">
           <div class="form-group">
             <label for="login-email">Email</label>
             <input
@@ -37,13 +37,12 @@
               v-model="password"
             />
           </div>
-          <div
+          <button
             :class="`btn btn-primary btn-block ${loading ? 'disabled' : null}`"
             type="submit"
-            @click="login"
           >
             Sign in <Spinner v-if="loading" />
-          </div>
+          </button>
         </form>
         <div class="text-right mt-10 font-size-12">
           <a :href="!loading ? recoverPasswordLink : null">Forgot password?</a>
@@ -91,10 +90,6 @@ export default class LoginForm extends Vue {
       return;
     }
 
-    const form = document.getElementById("login-form") as HTMLFormElement;
-    if (!form.reportValidity()) {
-      return;
-    }
     this.loading = true;
     const loginStatus = await UserHelper.signIn(this.email, this.password);
     if (!loginStatus.isSuccessful) {

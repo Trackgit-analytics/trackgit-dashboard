@@ -55,7 +55,7 @@ export default class Dashboard extends Vue {
   /** Get the active token from param and activate the token in module */
   setActiveTokenFromUrl() {
     if (this.activeToken.length > 0) {
-      const token = TokenModule.tokens.filter(
+      const token = TokenModule.tokens?.filter(
         token => token.id === this.activeToken
       )[0];
       if (token != null) {

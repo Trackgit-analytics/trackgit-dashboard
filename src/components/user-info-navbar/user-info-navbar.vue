@@ -1,7 +1,15 @@
 <template>
   <div class="dropdown">
     <div class="dropdown with-arrow">
+      <SkeletonLoader
+        class="loading-avatar-margins"
+        :circle="true"
+        v-if="!isUserAuthenticated"
+        width="40px"
+        height="40px"
+      />
       <button
+        v-else
         class="btn user-image"
         data-toggle="dropdown"
         type="button"
@@ -12,8 +20,13 @@
       </button>
       <div class="dropdown-menu dropdown-menu-right">
         <h6 class="dropdown-header ">
-          {{ userName }}
-          <span class="font-size-14 font-weight-normal">{{ userEmail }}</span>
+          <SkeletonLoader v-if="!isUserAuthenticated" width="100px" />
+          <span class="d-block" v-else>{{ userName }}</span>
+
+          <SkeletonLoader v-if="!isUserAuthenticated" width="130px" />
+          <span v-else class="font-size-14 font-weight-normal">{{
+            userEmail
+          }}</span>
         </h6>
         <a :href="accountSettingsLink" class="dropdown-item">
           Account settings
@@ -55,6 +68,11 @@ export default class UserInfoNavbar extends Vue {
       return this.defaultAvatar;
     }
     return UserModule.user.photoURL;
+  }
+
+  /** Checks whether the user is logged in */
+  get isUserAuthenticated(): boolean {
+    return UserModule.isUserAuthenticated ? true : false;
   }
 
   /** Returns the user's full name */
@@ -115,5 +133,9 @@ export default class UserInfoNavbar extends Vue {
     width: 100%;
     height: 100%;
   }
+}
+
+.loading-avatar-margins {
+  margin: 0px 0px 0px 10px;
 }
 </style>

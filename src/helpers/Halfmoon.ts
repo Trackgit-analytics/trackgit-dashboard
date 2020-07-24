@@ -2,6 +2,8 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const halfmoon = require("halfmoon");
 
+import Vue from "vue";
+
 export default class Halfmoon {
   /** Initialize halfmoon ui */
   public static init() {
@@ -32,6 +34,15 @@ export default class Halfmoon {
       )[0];
     }
     halfmoon.initStickyAlert(toastConfig);
+  }
+
+  /** Returns true if dark mode is on, false otherwise */
+  public static isDarkModeOn(): boolean {
+    const cookie = Vue.$cookies.get("darkModeOn");
+    if (!cookie) {
+      return false;
+    }
+    return cookie === "no" ? false : true;
   }
 }
 

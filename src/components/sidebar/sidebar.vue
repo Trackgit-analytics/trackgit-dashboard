@@ -28,6 +28,17 @@
             <i class="fa fa-plus" aria-hidden="true"></i>
           </span>
         </a>
+
+        <div v-if="loading">
+          <div
+            v-for="n in 3"
+            :key="n"
+            class="sidebar-link side-bar-link-with-icon"
+          >
+            <SkeletonLoader height="20px" />
+          </div>
+        </div>
+
         <a
           v-for="token in allTokens"
           @click="setActiveToken(token)"
@@ -82,6 +93,8 @@ export default class Sidebar extends Vue {
 
   searchQuery = "";
 
+  loading = true;
+
   /** All hyperlinks for project */
   get Hyperlinks() {
     return Hyperlinks;
@@ -116,6 +129,13 @@ export default class Sidebar extends Vue {
 
   /** Get the list of all tokens */
   get allTokens(): Token[] {
+    if (TokenModule.tokens == null) {
+      this.loading = true;
+      return [];
+    }
+
+    this.loading = false;
+
     const filtered = TokenModule.tokens.filter(token =>
       this.searchFilter(token.name, this.searchQuery)
     );

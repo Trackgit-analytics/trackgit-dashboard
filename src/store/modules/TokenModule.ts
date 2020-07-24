@@ -15,7 +15,7 @@ import Halfmoon, { HalfmoonAlertType } from "@/helpers/Halfmoon";
 
 @Module({ dynamic: true, namespaced: true, store, name: "TokenModule" })
 class TokenModule extends VuexModule {
-  public tokens: Token[] = [];
+  public tokens: Token[] | null = null;
   public activeToken: Token | null = null;
 
   @Mutation

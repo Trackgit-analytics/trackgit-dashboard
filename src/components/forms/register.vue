@@ -76,10 +76,9 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import { Hyperlinks } from "@/models/data/LinkDirectory.ts";
-import Spinner from "@/components/misc/spinner.vue";
 import UserHelper from "@/helpers/UserHelper";
 
-@Component({ components: { Spinner } })
+@Component
 export default class RegisterForm extends Vue {
   loading = false;
   redirectUrl = "/";

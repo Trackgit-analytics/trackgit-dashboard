@@ -64,7 +64,7 @@ router.beforeEach((to, from, next) => {
   if (!nearestWithMeta) return next();
 
   nearestWithMeta.meta.metaTags
-    .map((tagDef: any) => {
+    .map((tagDef: { [x: string]: string }) => {
       const tag = document.createElement("meta");
 
       Object.keys(tagDef).forEach(key => {
@@ -75,7 +75,7 @@ router.beforeEach((to, from, next) => {
 
       return tag;
     })
-    .forEach((tag: any) => document.head.appendChild(tag));
+    .forEach((tag: HTMLMetaElement) => document.head.appendChild(tag));
 
   next();
 });

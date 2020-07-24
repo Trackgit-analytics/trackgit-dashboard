@@ -8,6 +8,7 @@ const mockTokenRequests: TokenRequest[] = [
       city: "?",
       country: "United States"
     },
+    referrer: "/",
     time: Date.now(),
     tokenId: "1",
     userAgent: "github-camo"
@@ -19,6 +20,7 @@ const mockTokenRequests: TokenRequest[] = [
       city: "?",
       country: "United States"
     },
+    referrer: "/",
     time: Date.now(),
     tokenId: "1",
     userAgent: "github-camo"
@@ -30,6 +32,7 @@ const mockTokenRequests: TokenRequest[] = [
       city: "?",
       country: "United States"
     },
+    referrer: "/",
     time: Date.now(),
     tokenId: "1",
     userAgent: "github-camo"
@@ -41,6 +44,7 @@ const mockTokenRequests: TokenRequest[] = [
       city: "?",
       country: "United States"
     },
+    referrer: "/",
     time: Date.now(),
     tokenId: "1",
     userAgent: "github-camo"

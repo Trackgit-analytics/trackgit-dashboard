@@ -1,13 +1,23 @@
 import TokenRequest from "./TokenRequest";
 
+/** Field names of each token document in firestore */
+export enum TokenFields {
+  id = "id",
+  name = "name",
+  owner = "owner",
+  url = "url",
+  shortUrl = "shortUrl",
+  tokenRequests = "tokenRequests"
+}
+
 /** Interface for trackgit tokens */
 interface Token {
-  id: string;
-  name: string;
-  owner: string;
-  url: string;
-  shortUrl: string;
-  tokenRequests: TokenRequest[];
+  [TokenFields.id]: string;
+  [TokenFields.name]: string;
+  [TokenFields.owner]: string;
+  [TokenFields.url]: string;
+  [TokenFields.shortUrl]: string;
+  [TokenFields.tokenRequests]: TokenRequest[];
 }
 
 export default Token;

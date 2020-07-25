@@ -2,6 +2,7 @@
   <div>
     <LoginForm v-if="!isUserAuthenticated" />
     <RegisterForm v-if="!isUserAuthenticated" />
+    <CreateToken />
 
     <div
       class="page-wrapper with-navbar with-sidebar"
@@ -28,8 +29,11 @@ import TokenModule from "@/store/modules/TokenModule.ts";
 import LoginForm from "@/components/forms/login.vue";
 import RegisterForm from "@/components/forms/register.vue";
 import UserModule from "@/store/modules/UserModule";
+import CreateToken from "@/components/forms/create-token.vue";
 
-@Component({ components: { Navbar, Sidebar, LoginForm, RegisterForm } })
+@Component({
+  components: { Navbar, Sidebar, LoginForm, RegisterForm, CreateToken }
+})
 export default class Dashboard extends Vue {
   @Prop({ default: "" }) readonly activeToken!: string;
 

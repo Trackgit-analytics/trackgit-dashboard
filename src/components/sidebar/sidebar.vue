@@ -22,7 +22,12 @@
           Tokens
         </h5>
         <div class="sidebar-divider"></div>
-        <a href="#" class="sidebar-link font-weight-medium font-size-12">
+        <a
+          @click="openCreateTokenForm"
+          class="sidebar-link font-weight-medium font-size-12"
+          role="button"
+          aria-label="Create new token"
+        >
           Create new token
           <span class="float-right">
             <i class="fa fa-plus" aria-hidden="true"></i>
@@ -85,6 +90,7 @@ import { Hyperlinks } from "@/models/data/LinkDirectory.ts";
 import SidebarModule from "@/store/modules/SidebarModule.ts";
 import TokenModule from "@/store/modules/TokenModule.ts";
 import Token from "@/models/interfaces/Token";
+import Halfmoon from "@/helpers/Halfmoon";
 
 @Component
 export default class Sidebar extends Vue {
@@ -210,6 +216,11 @@ export default class Sidebar extends Vue {
         .getElementsByClassName("content-wrapper")[0]
         .classList.add("opacity-half");
     }
+  }
+
+  /** Opens the create token form */
+  openCreateTokenForm() {
+    Halfmoon.toggleModal("create-token");
   }
 }
 </script>

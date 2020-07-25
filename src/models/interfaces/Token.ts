@@ -21,3 +21,11 @@ interface Token {
 }
 
 export default Token;
+
+/** The token document structure in firestore */
+export interface TokenFirestore {
+  [TokenFields.name]: string;
+  [TokenFields.owner]: string;
+  [TokenFields.url]: string;
+  [TokenFields.shortUrl]: string;
+}

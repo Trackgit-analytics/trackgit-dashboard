@@ -4,6 +4,9 @@ import TokenRequest, {
   TokenRequestFileds
 } from "@/models/interfaces/TokenRequest";
 import Halfmoon, { HalfmoonAlertType } from "./Halfmoon";
+import baseService from "@/services/baseService";
+import { API } from "@/models/data/LinkDirectory";
+import ApiKeys from "@/models/data/ApiKeys";
 
 export default class TokenHelper {
   /**
@@ -35,5 +38,49 @@ export default class TokenHelper {
     }
 
     return requests;
+  }
+
+  /** Generate a random 20-character ID for tokens */
+  public static generateNewTokenId(): string {
+    let id = "";
+    for (let i = 0; i < 2; i++) {
+      id +=
+        Date.now().toString(36) +
+        Math.random()
+          .toString(36)
+          .substr(2, 20);
+    }
+    return id.substr(0, 20);
+  }
+
+  /**
+   * Generate a shortended URL for tokens
+   * @param tokenUrl The long url to shorten
+   * @returns A shortended url, or the long url if the url shortener API fails
+   */
+  public static async getShortTokenUrl(tokenUrl: string): Promise<string> {
+    let shortUrl = "";
+
+    const url = API.urlShortener.replace("{0}", tokenUrl);
+    const headers = {
+      "x-rapidapi-host": "shorturl-sfy-cx.p.rapidapi.com",
+      "x-rapidapi-key": ApiKeys.rapidApi
+    };
+
+    try {
+      const response = await baseService.get(url, { headers });
+
+      if (response.status === 200) {
+        const result = new DOMParser().parseFromString(
+          response.data,
+          "text/xml"
+        );
+        shortUrl = (result.firstChild as any).innerHTML;
+      }
+    } catch {
+      shortUrl = tokenUrl;
+    }
+
+    return shortUrl;
   }
 }

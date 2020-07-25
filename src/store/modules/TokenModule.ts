@@ -13,6 +13,7 @@ import UserModule from "./UserModule";
 import TokenHelper from "@/helpers/TokenHelper";
 import Halfmoon, { HalfmoonAlertType } from "@/helpers/Halfmoon";
 import { API } from "@/models/data/LinkDirectory";
+import TokenRequest from "@/models/interfaces/TokenRequest";
 
 @Module({ dynamic: true, namespaced: true, store, name: "TokenModule" })
 class TokenModule extends VuexModule {
@@ -35,38 +36,55 @@ class TokenModule extends VuexModule {
   }
 
   @Action
-  public async fetchAllTokens() {
-    const tokens = new Array<Token>();
-
-    const tokenSnapshot = await FirebaseModule.db
-      ?.collection(CollectionNames.tokens)
-      .where(TokenFields.owner, "==", UserModule.user?.uid)
-      .get()
-      .catch(() => {
-        Halfmoon.toast({
-          content: "Couldn't fetch token list",
-          alertType: HalfmoonAlertType.danger
-        });
-      });
-
-    if (tokenSnapshot) {
-      tokenSnapshot?.forEach(async doc => {
-        const { name, owner, url, shortUrl } = doc.data();
-        const tokenRequests = await TokenHelper.getTokenRequests(doc.id);
-
-        const token: Token = {
-          id: doc.id,
-          name,
-          owner,
-          url,
-          shortUrl,
-          tokenRequests
-        };
-        tokens.push(token);
-      });
+  public updateTokenRequests(updateInfo: {
+    tokenId: string;
+    tokenRequests: TokenRequest[];
+  }) {
+    if (!this.tokens) {
+      return;
     }
 
-    this.context.commit("setTokens", tokens);
+    const newTokenList = this.tokens;
+    newTokenList.filter(
+      token => token.id === updateInfo.tokenId
+    )[0].tokenRequests = updateInfo.tokenRequests;
+
+    this.context.commit("setTokens", newTokenList);
+  }
+
+  @Action
+  public async fetchAllTokens() {
+    await FirebaseModule.db
+      ?.collection(CollectionNames.tokens)
+      .where(TokenFields.owner, "==", UserModule.user?.uid)
+      .onSnapshot(
+        tokenSnapshot => {
+          const tokens = new Array<Token>();
+
+          tokenSnapshot?.forEach(async doc => {
+            const { name, owner, url, shortUrl } = doc.data();
+            await TokenHelper.setTokenRequestListener(doc.id, name);
+
+            const token: Token = {
+              id: doc.id,
+              name,
+              owner,
+              url,
+              shortUrl,
+              tokenRequests: []
+            };
+            tokens.push(token);
+          });
+
+          this.context.commit("setTokens", tokens);
+        },
+        () => {
+          Halfmoon.toast({
+            content: "Couldn't fetch token list",
+            alertType: HalfmoonAlertType.danger
+          });
+        }
+      );
   }
 
   @Action
@@ -95,6 +113,7 @@ class TokenModule extends VuexModule {
           content: "Successfully created new token",
           alertType: HalfmoonAlertType.success
         });
+        this.context.commit("setActiveToken", tokenId);
       })
       .catch(error => {
         Halfmoon.toast({

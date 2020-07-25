@@ -7,6 +7,7 @@ import Halfmoon, { HalfmoonAlertType } from "./Halfmoon";
 import baseService from "@/services/baseService";
 import { API } from "@/models/data/LinkDirectory";
 import ApiKeys from "@/models/data/ApiKeys";
+import TokenModule from "@/store/modules/TokenModule";
 
 export default class TokenHelper {
   /**
@@ -38,6 +39,40 @@ export default class TokenHelper {
     }
 
     return requests;
+  }
+
+  /**
+   * Sets up a realtime listener for requests on the token.
+   * The listener updates TokenModule as data updates in firestore.
+   * @param tokenId The token Id whose requests to listen to
+   * @param tokenName The name of the token (only used for displaying errors)
+   */
+  public static async setTokenRequestListener(
+    tokenId: string,
+    tokenName: string
+  ) {
+    await FirebaseModule.db
+      ?.collection(CollectionNames.tokens)
+      .doc(tokenId)
+      .collection(CollectionNames.requests)
+      .where(TokenRequestFileds.tokenId, "==", tokenId)
+      .onSnapshot(
+        tokenRequestsSnapShot => {
+          const tokenRequests: TokenRequest[] = [];
+
+          tokenRequestsSnapShot.forEach(doc => {
+            tokenRequests.push(doc.data() as TokenRequest);
+          });
+
+          TokenModule.updateTokenRequests({ tokenId, tokenRequests });
+        },
+        () => {
+          Halfmoon.toast({
+            content: `Couldn't fetch requests for token: ${tokenName}`,
+            alertType: HalfmoonAlertType.danger
+          });
+        }
+      );
   }
 
   /** Generate a random 20-character ID for tokens */
@@ -75,7 +110,7 @@ export default class TokenHelper {
           response.data,
           "text/xml"
         );
-        shortUrl = (result.firstChild as any).innerHTML;
+        shortUrl = (result.firstChild as HTMLAnchorElement).innerHTML;
       }
     } catch {
       shortUrl = tokenUrl;

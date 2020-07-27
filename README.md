@@ -1,4 +1,4 @@
-<img src="https://us-central1-trackgit-analytics.cloudfunctions.net/token/ping/kd147audoadatxdznskd" />
+<img src="https://us-central1-trackgit-analytics.cloudfunctions.net/token/ping/kd10uto2x9oo28fluzgk" />
 
 # trackgit-dashboard
 Dashboard for Trackgit

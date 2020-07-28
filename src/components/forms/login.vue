@@ -17,6 +17,7 @@
             <label for="login-email">Email</label>
             <input
               type="email"
+              name="email"
               id="login-email"
               class="form-control"
               placeholder="Email"
@@ -29,6 +30,7 @@
             <label for="login-password">Password</label>
             <input
               type="password"
+              name="current-password"
               id="login-password"
               class="form-control"
               placeholder="Password"

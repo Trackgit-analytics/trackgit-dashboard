@@ -3,7 +3,7 @@ import CollectionNames from "@/models/data/CollectionNames";
 import TokenRequest, {
   TokenRequestFileds
 } from "@/models/interfaces/TokenRequest";
-import Halfmoon, { HalfmoonAlertType } from "./Halfmoon";
+import Halfmoon from "./Halfmoon";
 import baseService from "@/services/baseService";
 import { API } from "@/models/data/LinkDirectory";
 import ApiKeys from "@/models/data/ApiKeys";
@@ -26,9 +26,8 @@ export default class TokenHelper {
       .where(TokenRequestFileds.tokenId, "==", tokenId)
       .get()
       .catch(() => {
-        Halfmoon.toast({
-          content: "Couldn't fetch token request list",
-          alertType: HalfmoonAlertType.danger
+        Halfmoon.toastError({
+          content: "Couldn't fetch token request list"
         });
       });
 
@@ -67,9 +66,8 @@ export default class TokenHelper {
           TokenModule.updateTokenRequests({ tokenId, tokenRequests });
         },
         () => {
-          Halfmoon.toast({
-            content: `Couldn't fetch requests for token: ${tokenName}`,
-            alertType: HalfmoonAlertType.danger
+          Halfmoon.toastError({
+            content: `Couldn't fetch requests for token: ${tokenName}`
           });
         }
       );

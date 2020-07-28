@@ -11,7 +11,7 @@ import FirebaseModule from "./FirebaseModule";
 import CollectionNames from "@/models/data/CollectionNames";
 import UserModule from "./UserModule";
 import TokenHelper from "@/helpers/TokenHelper";
-import Halfmoon, { HalfmoonAlertType } from "@/helpers/Halfmoon";
+import Halfmoon from "@/helpers/Halfmoon";
 import { API } from "@/models/data/LinkDirectory";
 import TokenRequest from "@/models/interfaces/TokenRequest";
 
@@ -79,9 +79,8 @@ class TokenModule extends VuexModule {
           this.context.commit("setTokens", tokens);
         },
         () => {
-          Halfmoon.toast({
-            content: "Couldn't fetch token list",
-            alertType: HalfmoonAlertType.danger
+          Halfmoon.toastError({
+            content: "Couldn't fetch token list"
           });
         }
       );
@@ -109,16 +108,14 @@ class TokenModule extends VuexModule {
       .doc(tokenId)
       .set(newToken)
       .then(() => {
-        Halfmoon.toast({
-          content: "Successfully created new token",
-          alertType: HalfmoonAlertType.success
+        Halfmoon.toastSuccess({
+          content: "Successfully created new token"
         });
         this.context.commit("setActiveToken", tokenId);
       })
       .catch(error => {
-        Halfmoon.toast({
-          content: "Couldn't create a new token",
-          alertType: HalfmoonAlertType.danger
+        Halfmoon.toastError({
+          content: "Couldn't create a new token"
         });
         console.error(error);
       });

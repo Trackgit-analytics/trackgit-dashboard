@@ -4,6 +4,36 @@ const halfmoon = require("halfmoon");
 
 import Vue from "vue";
 
+interface HalfmoonToastConfig {
+  /** Required, main content of the alert, type: string (can contain HTML) */
+  content: string;
+  /** Optional, title of the alert, default: "", type: string */
+  title?: string;
+  /** Optional, type of the alert, default: "", must be "alert-primary" || "alert-success" || "alert-secondary" || "alert-danger" */
+  alertType?: HalfmoonAlertType;
+  /** Optional, fill type of the alert, default: "", must be "filled-lm" || "filled-dm" || "filled" */
+  fillType?: HalfmoonFillType;
+  /** Optional, the alert will contain the close button if true, default: true, type: boolean */
+  hasDismissButton?: boolean;
+  /** Optional, time the alert stays on the screen (in ms), default: 5000, type: number */
+  timeShown?: number;
+}
+
+export enum HalfmoonAlertType {
+  default = "",
+  primary = "alert-primary",
+  success = "alert-success",
+  secondary = "alert-secondary",
+  danger = "alert-danger"
+}
+
+export enum HalfmoonFillType {
+  default = "",
+  filled = "filled",
+  filledLm = "filled-lm",
+  filledDm = "filled-dm"
+}
+
 export default class Halfmoon {
   /** Initialize halfmoon ui */
   public static init() {
@@ -34,6 +64,18 @@ export default class Halfmoon {
       )[0];
     }
     halfmoon.initStickyAlert(toastConfig);
+  }
+
+  /** Show an error toast */
+  public static toastError(toastConfig: HalfmoonToastConfig) {
+    toastConfig.alertType = HalfmoonAlertType.danger;
+    this.toast(toastConfig);
+  }
+
+  /** Show a success toast */
+  public static toastSuccess(toastConfig: HalfmoonToastConfig) {
+    toastConfig.alertType = HalfmoonAlertType.success;
+    this.toast(toastConfig);
   }
 
   /**
@@ -69,34 +111,4 @@ export default class Halfmoon {
     }
     return cookie === "no" ? false : true;
   }
-}
-
-interface HalfmoonToastConfig {
-  /** Required, main content of the alert, type: string (can contain HTML) */
-  content: string;
-  /** Optional, title of the alert, default: "", type: string */
-  title?: string;
-  /** Optional, type of the alert, default: "", must be "alert-primary" || "alert-success" || "alert-secondary" || "alert-danger" */
-  alertType?: HalfmoonAlertType;
-  /** Optional, fill type of the alert, default: "", must be "filled-lm" || "filled-dm" || "filled" */
-  fillType?: HalfmoonFillType;
-  /** Optional, the alert will contain the close button if true, default: true, type: boolean */
-  hasDismissButton?: boolean;
-  /** Optional, time the alert stays on the screen (in ms), default: 5000, type: number */
-  timeShown?: number;
-}
-
-export enum HalfmoonAlertType {
-  default = "",
-  primary = "alert-primary",
-  success = "alert-success",
-  secondary = "alert-secondary",
-  danger = "alert-danger"
-}
-
-export enum HalfmoonFillType {
-  default = "",
-  filled = "filled",
-  filledLm = "filled-lm",
-  filledDm = "filled-dm"
 }

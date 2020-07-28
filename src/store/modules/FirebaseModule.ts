@@ -12,6 +12,7 @@ import "firebase/firestore";
 import "firebase/analytics";
 import FirebaseConfig from "@/models/data/FirebaseConfig";
 import UserHelper from "@/helpers/UserHelper";
+import FirebaseHelper from "@/helpers/FirebaseHelper";
 
 @Module({ dynamic: true, namespaced: true, store, name: "FirebaseModule" })
 class FirebaseModule extends VuexModule {
@@ -54,6 +55,10 @@ class FirebaseModule extends VuexModule {
 
     if (this.db == null) {
       const firebaseDb = firebase.firestore();
+
+      const isCacheEnabled = await FirebaseHelper.setFirestoreCache(firebaseDb);
+      if (!isCacheEnabled) return;
+
       this.context.commit("setFirebaseDb", firebaseDb);
     }
 

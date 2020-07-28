@@ -36,6 +36,31 @@ export default class Halfmoon {
     halfmoon.initStickyAlert(toastConfig);
   }
 
+  /**
+   * Display a critical error.
+   * This will block the UI and prevent any further action from the user.
+   * @param errorMessage The error message to show
+   */
+  public static showCriticalError(errorMessage: string) {
+    const errorModal = `<div
+    class="modal"
+    id="criticalError"
+    tabindex="-1"
+    role="dialog"
+    data-overlay-dismissal-disabled="true"
+    data-esc-dismissal-disabled="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content text-center font-size-18">${errorMessage}</div>
+    </div>
+  </div>`;
+    const htmlObject = document.createElement("div");
+    htmlObject.innerHTML = errorModal;
+
+    document.body.appendChild(htmlObject);
+    this.toggleModal("criticalError");
+  }
+
   /** Returns true if dark mode is on, false otherwise */
   public static isDarkModeOn(): boolean {
     const cookie = Vue.$cookies.get("darkModeOn");

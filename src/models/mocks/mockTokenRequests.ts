@@ -2,52 +2,28 @@ import TokenRequest from "@/models/interfaces/TokenRequest";
 
 const mockTokenRequests: TokenRequest[] = [
   {
-    deviceKey: "1",
-    deviceType: "phone",
-    location: {
-      city: "?",
-      country: "United States"
-    },
-    referrer: "/",
-    time: Date.now(),
+    groupId: 1,
+    requestCount: 0,
     tokenId: "1",
-    userAgent: "github-camo"
+    timeLogs: []
   },
   {
-    deviceKey: "1",
-    deviceType: "phone",
-    location: {
-      city: "?",
-      country: "United States"
-    },
-    referrer: "/",
-    time: Date.now(),
+    groupId: 1,
+    requestCount: 1,
     tokenId: "1",
-    userAgent: "github-camo"
+    timeLogs: [Date.now()]
   },
   {
-    deviceKey: "1",
-    deviceType: "phone",
-    location: {
-      city: "?",
-      country: "United States"
-    },
-    referrer: "/",
-    time: Date.now(),
+    groupId: 2,
+    requestCount: 0,
     tokenId: "1",
-    userAgent: "github-camo"
+    timeLogs: []
   },
   {
-    deviceKey: "1",
-    deviceType: "phone",
-    location: {
-      city: "?",
-      country: "United States"
-    },
-    referrer: "/",
-    time: Date.now(),
+    groupId: 2,
+    requestCount: 0,
     tokenId: "1",
-    userAgent: "github-camo"
+    timeLogs: []
   }
 ];
 

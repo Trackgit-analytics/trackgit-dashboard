@@ -1,26 +1,17 @@
 /** Field names of each token request document in firestore */
 export enum TokenRequestFileds {
-  deviceKey = "deviceKey",
-  deviceType = "deviceType",
-  location = "location",
-  referrer = "referrer",
-  time = "time",
-  tokenId = "tokenId",
-  userAgent = "userAgent"
+  groupId = "groupId",
+  requestCount = "requestCount",
+  timeLogs = "timeLogs",
+  tokenId = "tokenId"
 }
 
 /** A request interface for token requests */
 interface TokenRequest {
-  [TokenRequestFileds.deviceKey]: string;
-  [TokenRequestFileds.deviceType]: string;
-  [TokenRequestFileds.location]: {
-    city: string;
-    country: string;
-  };
-  [TokenRequestFileds.referrer]: string;
-  [TokenRequestFileds.time]: number;
+  [TokenRequestFileds.groupId]: number;
+  [TokenRequestFileds.requestCount]: number;
+  [TokenRequestFileds.timeLogs]: number[];
   [TokenRequestFileds.tokenId]: string;
-  [TokenRequestFileds.userAgent]: string;
 }
 
 export default TokenRequest;

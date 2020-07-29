@@ -124,10 +124,10 @@ export default class TokenHelper {
 
   /**
    * Get the time logs for the given token for a specific period of time
-   * @param maxDelta The maximum difference, in milliseconds, between now and the last time log to get
+   * @param timeToPast The maximum time, in milliseconds, between now and the last time log
    * @param token The token whose time logs to get. Returns [] if null token is given
    */
-  public static getTimeLogs(maxDelta: number, token: Token | null): number[] {
+  public static getTimeLogs(timeToPast: number, token: Token | null): number[] {
     if (!token) {
       return [];
     }
@@ -138,12 +138,12 @@ export default class TokenHelper {
       const tokenRequest = token.tokenRequests[i];
       if (!tokenRequest) {
         continue;
-      } else if (dateNow - tokenRequest.groupId <= maxDelta) {
+      } else if (dateNow - tokenRequest.groupId <= timeToPast) {
         for (let j = 0; j < tokenRequest.timeLogs.length; j++) {
           const timeLog = tokenRequest.timeLogs[j];
           if (timeLog == null) {
             continue;
-          } else if (dateNow - timeLog <= maxDelta) {
+          } else if (dateNow - timeLog <= timeToPast) {
             timeLogsForPeriod.push(timeLog);
           }
         }

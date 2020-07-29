@@ -125,9 +125,9 @@ export default class TokenHelper {
   /**
    * Get the time logs for the given token for a specific period of time
    * @param maxDelta The maximum difference, in milliseconds, between now and the last time log to get
-   * @param token The token whose time logs to get
+   * @param token The token whose time logs to get. Returns [] if null token is given
    */
-  public static getTimeLogs(maxDelta: number, token: Token): number[] {
+  public static getTimeLogs(maxDelta: number, token: Token | null): number[] {
     if (!token) {
       return [];
     }

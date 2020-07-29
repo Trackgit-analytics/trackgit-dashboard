@@ -68,9 +68,6 @@ export default class TokenDetails extends Vue {
 
   /** Gets the total number of views for the last 24 hours */
   get viewsLastDay(): string {
-    if (!this.token) {
-      return "";
-    }
     const oneDayInMs = 24 * 60 * 60 * 1000;
     const timeLogsLastDay = TokenHelper.getTimeLogs(oneDayInMs, this.token);
     return NumberHelper.abbreviate(timeLogsLastDay.length);

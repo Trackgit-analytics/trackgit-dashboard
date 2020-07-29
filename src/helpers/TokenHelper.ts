@@ -8,6 +8,7 @@ import baseService from "@/services/baseService";
 import { API } from "@/models/data/LinkDirectory";
 import ApiKeys from "@/models/data/ApiKeys";
 import TokenModule from "@/store/modules/TokenModule";
+import Token from "@/models/interfaces/Token";
 
 export default class TokenHelper {
   /**
@@ -46,11 +47,8 @@ export default class TokenHelper {
    * @param tokenId The token Id whose requests to listen to
    * @param tokenName The name of the token (only used for displaying errors)
    */
-  public static async setTokenRequestListener(
-    tokenId: string,
-    tokenName: string
-  ) {
-    await FirebaseModule.db
+  public static setTokenRequestListener(tokenId: string, tokenName: string) {
+    FirebaseModule.db
       ?.collection(CollectionNames.tokens)
       .doc(tokenId)
       .collection(CollectionNames.requests)
@@ -60,7 +58,14 @@ export default class TokenHelper {
           const tokenRequests: TokenRequest[] = [];
 
           tokenRequestsSnapShot.forEach(doc => {
-            tokenRequests.push(doc.data() as TokenRequest);
+            const tokenRequest = doc.data() as TokenRequest;
+
+            // add the date timestamps to each timelog (ie. decode the timelogs)
+            for (let i = 0; i < tokenRequest.timeLogs.length; i++) {
+              tokenRequest.timeLogs[i] += tokenRequest.groupId;
+            }
+
+            tokenRequests.push(tokenRequest);
           });
 
           TokenModule.updateTokenRequests({ tokenId, tokenRequests });
@@ -115,5 +120,35 @@ export default class TokenHelper {
     }
 
     return shortUrl;
+  }
+
+  /**
+   * Get the time logs for the given token for a specific period of time
+   * @param maxDelta The maximum difference, in milliseconds, between now and the last time log to get
+   * @param token The token whose time logs to get
+   */
+  public static getTimeLogs(maxDelta: number, token: Token): number[] {
+    if (!token) {
+      return [];
+    }
+    const dateNow = Date.now();
+    const timeLogsForPeriod: number[] = [];
+
+    for (let i = 0; i < token.tokenRequests.length; i++) {
+      const tokenRequest = token.tokenRequests[i];
+      if (!tokenRequest) {
+        continue;
+      } else if (dateNow - tokenRequest.groupId <= maxDelta) {
+        for (let j = 0; j < tokenRequest.timeLogs.length; j++) {
+          const timeLog = tokenRequest.timeLogs[j];
+          if (timeLog == null) {
+            continue;
+          } else if (dateNow - timeLog <= maxDelta) {
+            timeLogsForPeriod.push(timeLog);
+          }
+        }
+      }
+    }
+    return timeLogsForPeriod;
   }
 }

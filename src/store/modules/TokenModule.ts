@@ -14,6 +14,8 @@ import TokenHelper from "@/helpers/TokenHelper";
 import Halfmoon from "@/helpers/Halfmoon";
 import { API } from "@/models/data/LinkDirectory";
 import TokenRequest from "@/models/interfaces/TokenRequest";
+import CookieNames from "@/models/data/CookieNames";
+import Vue from "vue";
 
 @Module({ dynamic: true, namespaced: true, store, name: "TokenModule" })
 class TokenModule extends VuexModule {
@@ -53,17 +55,17 @@ class TokenModule extends VuexModule {
   }
 
   @Action
-  public async fetchAllTokens() {
-    await FirebaseModule.db
+  public fetchAllTokens() {
+    FirebaseModule.db
       ?.collection(CollectionNames.tokens)
       .where(TokenFields.owner, "==", UserModule.user?.uid)
       .onSnapshot(
         tokenSnapshot => {
-          const tokens = new Array<Token>();
+          const tokens: Token[] = [];
 
-          tokenSnapshot?.forEach(async doc => {
+          tokenSnapshot.forEach(doc => {
             const { name, owner, url, shortUrl } = doc.data();
-            await TokenHelper.setTokenRequestListener(doc.id, name);
+            TokenHelper.setTokenRequestListener(doc.id, name);
 
             const token: Token = {
               id: doc.id,
@@ -123,6 +125,7 @@ class TokenModule extends VuexModule {
 
   @Action
   public updateActiveToken(token: Token) {
+    Vue.$cookies.set(CookieNames.activeTokenId, token.id);
     this.context.commit("setActiveToken", token);
   }
 }

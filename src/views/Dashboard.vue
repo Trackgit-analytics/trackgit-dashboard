@@ -15,6 +15,7 @@
 
       <div class="content-wrapper" @click="closeSidebar">
         <Navbar />
+        <TokenDetails />
       </div>
     </div>
   </div>
@@ -30,9 +31,19 @@ import LoginForm from "@/components/forms/login.vue";
 import RegisterForm from "@/components/forms/register.vue";
 import UserModule from "@/store/modules/UserModule";
 import CreateToken from "@/components/forms/create-token.vue";
+import TokenDetails from "@/components/token-details/token-details.vue";
+import Token from "@/models/interfaces/Token";
+import CookieNames from "@/models/data/CookieNames";
 
 @Component({
-  components: { Navbar, Sidebar, LoginForm, RegisterForm, CreateToken }
+  components: {
+    Navbar,
+    Sidebar,
+    LoginForm,
+    RegisterForm,
+    CreateToken,
+    TokenDetails
+  }
 })
 export default class Dashboard extends Vue {
   @Prop({ default: "" }) readonly activeToken!: string;
@@ -42,12 +53,16 @@ export default class Dashboard extends Vue {
     return UserModule.isUserAuthenticated;
   }
 
+  /** Gets the list of all tokens in TokenModule */
+  get tokenList(): Token[] | null {
+    return TokenModule.tokens;
+  }
+
   /** Get logged in user's data */
   @Watch("isUserAuthenticated")
   async getUserData(isAuthenticated: boolean) {
     if (isAuthenticated) {
       await this.fetchAllTokens();
-      this.setActiveTokenFromUrl();
     }
   }
 
@@ -56,16 +71,33 @@ export default class Dashboard extends Vue {
     await TokenModule.fetchAllTokens();
   }
 
-  /** Get the active token from param and activate the token in module */
-  setActiveTokenFromUrl() {
+  /** Get the active token from param/cookie and activate the token in module */
+  @Watch("tokenList")
+  setActiveToken(tokenList: Token[] | null) {
+    if (tokenList == null) {
+      return;
+    }
+
+    // check token in url param
     if (this.activeToken.length > 0) {
-      const token = TokenModule.tokens?.filter(
-        token => token.id === this.activeToken
-      )[0];
+      const token = tokenList.find(token => token.id === this.activeToken);
       if (token != null) {
         TokenModule.updateActiveToken(token);
       } else {
-        this.$router.push({ path: "./" });
+        TokenModule.updateActiveToken(tokenList[0]);
+        this.$router.push({ path: `/token/${tokenList[0].id}` });
+      }
+      SidebarModule.updateSidebarVisibility(false);
+    }
+    // check for active token cookie
+    else if (Vue.$cookies.isKey(CookieNames.activeTokenId)) {
+      const token = tokenList.find(
+        token => token.id === Vue.$cookies.get(CookieNames.activeTokenId)
+      );
+      if (token) {
+        TokenModule.updateActiveToken(token);
+        SidebarModule.updateSidebarVisibility(false);
+        this.$router.push({ path: `/token/${token.id}` });
       }
     }
   }

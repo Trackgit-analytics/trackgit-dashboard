@@ -161,6 +161,16 @@ a {
   transition: top 0ms !important;
 }
 
+.no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
 @media (max-width: 576px) {
   .modal-content {
     max-width: 90%;

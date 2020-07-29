@@ -57,7 +57,7 @@
           <span class="sidebar-icon">
             <i class="fa fa-code" aria-hidden="true"></i>
           </span>
-          {{ token.name }}
+          <span class="no-select">{{ token.name }}</span>
         </a>
         <br />
         <br />

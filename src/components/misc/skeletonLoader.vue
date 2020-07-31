@@ -17,8 +17,8 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
-import Halfmoon from "@/helpers/Halfmoon";
 import { Skeleton, SkeletonTheme } from "vue-loading-skeleton";
+import HalmoonModule from "@/store/modules/HalmoonModule";
 
 Vue.component("Skeleton", Skeleton);
 Vue.component("SkeletonTheme", SkeletonTheme);
@@ -33,7 +33,7 @@ export default class SkeletonLoader extends Vue {
   @Prop({ default: undefined }) readonly loading!: boolean;
 
   get isDarkModeOn(): boolean {
-    return Halfmoon.isDarkModeOn();
+    return HalmoonModule.isDarkMode;
   }
 }
 </script>

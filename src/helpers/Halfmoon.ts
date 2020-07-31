@@ -3,6 +3,7 @@
 const halfmoon = require("halfmoon");
 
 import Vue from "vue";
+import HalmoonModule from "@/store/modules/HalmoonModule";
 
 interface HalfmoonToastConfig {
   /** Required, main content of the alert, type: string (can contain HTML) */
@@ -38,6 +39,7 @@ export default class Halfmoon {
   /** Initialize halfmoon ui */
   public static init() {
     halfmoon.onDOMContentLoaded();
+    HalmoonModule.updateDarkMode(this.isDarkModeOn());
   }
 
   /**

@@ -47,7 +47,7 @@
 import { Vue, Component } from "vue-property-decorator";
 import SidebarModule from "@/store/modules/SidebarModule";
 import UserInfoNavbar from "@/components/user-info-navbar/user-info-navbar.vue";
-import Halfmoon from "@/helpers/Halfmoon";
+import HalfmoonModule from "@/store/modules/HalmoonModule.ts";
 
 @Component({ components: { UserInfoNavbar } })
 export default class Navbar extends Vue {
@@ -56,7 +56,7 @@ export default class Navbar extends Vue {
   }
 
   toggleDarkMode() {
-    Halfmoon.toggleDarkMode();
+    HalfmoonModule.toggleDarkMode();
   }
 }
 </script>

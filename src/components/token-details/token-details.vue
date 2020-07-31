@@ -47,6 +47,9 @@
         </div>
       </div>
     </div>
+    <div class="graph-container">
+      <TokenGraph :token="token" />
+    </div>
   </div>
 </template>
 
@@ -56,8 +59,9 @@ import Token from "@/models/interfaces/Token";
 import TokenModule from "@/store/modules/TokenModule";
 import NumberHelper from "@/helpers/NumberHelper.ts";
 import TokenHelper from "@/helpers/TokenHelper";
+import TokenGraph from "@/components/token-graph/token-graph.vue";
 
-@Component
+@Component({ components: { TokenGraph } })
 export default class TokenDetails extends Vue {
   loading = true;
 
@@ -100,6 +104,9 @@ export default class TokenDetails extends Vue {
 <style lang="scss" scoped>
 .token-details-container {
   padding: 0px 6vw;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 8.3rem);
 
   .analytics-container {
     .analytics-card > .card {
@@ -108,6 +115,14 @@ export default class TokenDetails extends Vue {
       margin-bottom: 0px;
       min-width: 100px;
     }
+  }
+
+  .graph-container {
+    overflow-y: hidden;
+    min-height: 350px;
+    flex-grow: 1;
+    box-sizing: border-box;
+    padding-bottom: 20px;
   }
 }
 

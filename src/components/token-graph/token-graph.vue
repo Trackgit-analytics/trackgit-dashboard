@@ -1,5 +1,42 @@
 <template>
-  <ApexCharts type="line" :options="chartOptions" :series="series" />
+  <div class="token-graph">
+    <div class="timeframe-buttons">
+      <button
+        :class="
+          `btn btn-sm ${
+            selectedPeriod === timeFrames.week ? 'btn-primary' : ''
+          }`
+        "
+        @click="selectedPeriod = timeFrames.week"
+        type="button"
+      >
+        7d
+      </button>
+      <button
+        :class="
+          `btn btn-sm ${
+            selectedPeriod === timeFrames.month ? 'btn-primary' : ''
+          }`
+        "
+        @click="selectedPeriod = timeFrames.month"
+        type="button"
+      >
+        30d
+      </button>
+      <button
+        :class="
+          `btn btn-sm ${
+            selectedPeriod === timeFrames.year ? 'btn-primary' : ''
+          }`
+        "
+        @click="selectedPeriod = timeFrames.year"
+        type="button"
+      >
+        365d
+      </button>
+    </div>
+    <ApexCharts type="line" :options="chartOptions" :series="series" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -7,6 +44,9 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 import Token from "@/models/interfaces/Token";
 import VueApexCharts from "vue-apexcharts";
 import HalmoonModule from "@/store/modules/HalmoonModule";
+import TokenHelper from "@/helpers/TokenHelper";
+import DeviceHelper from "@/helpers/DeviceHelper.ts";
+import DateHelper from "@/helpers/DateHelper.ts";
 
 Vue.component("ApexCharts", VueApexCharts);
 
@@ -14,17 +54,78 @@ Vue.component("ApexCharts", VueApexCharts);
 export default class TokenGraph extends Vue {
   @Prop({ required: true }) readonly token!: Token;
 
+  /** Available time frames to choose from */
+  timeFrames = {
+    week: 0,
+    month: 1,
+    year: 2
+  };
+
+  /** Currently selected time frame */
+  selectedPeriod = this.timeFrames.week;
+
   /** gets the current app theme (dark/light) */
   get appTheme(): string {
     return HalmoonModule.isDarkMode ? "dark" : "light";
+  }
+
+  /** Gets the request data and labels with respect to the selected time period */
+  get requestsByTime(): { data: number[]; labels: string[] } {
+    const data: number[] = [];
+    const labels: string[] = [];
+
+    let dayJump: number;
+    let totalIterations: number;
+
+    switch (this.selectedPeriod) {
+      case this.timeFrames.week:
+        dayJump = 1;
+        totalIterations = 7;
+        break;
+      case this.timeFrames.month:
+        dayJump = DeviceHelper.isPhone() ? 7 : 1;
+        totalIterations = DeviceHelper.isPhone() ? 4 : 30;
+        break;
+      case this.timeFrames.year:
+        dayJump = DeviceHelper.isPhone() ? 60 : 30;
+        totalIterations = DeviceHelper.isPhone() ? 6 : 12;
+        break;
+      default:
+        dayJump = 1;
+        totalIterations = 7;
+    }
+
+    const dayMilliseconds = 24 * 60 * 60 * 1000 * dayJump;
+    const dateNow = Date.now();
+
+    for (let i = totalIterations; i >= 0; i--) {
+      const dateEnd = dateNow - i * dayMilliseconds;
+      const dateStart = dateEnd - dayMilliseconds;
+
+      const timelogs = TokenHelper.getTimeLogs(this.token, dateStart, dateEnd);
+      data.push(timelogs.length);
+
+      const labelDate = new Date(dateEnd);
+      let label = "";
+      if (this.selectedPeriod === this.timeFrames.year) {
+        label = `${labelDate.getMonth() + 1}/${labelDate.getFullYear()}`;
+      } else {
+        label = `${labelDate.getDate()} ${
+          DateHelper.monthNames[labelDate.getMonth()]
+        }`;
+      }
+      labels.push(label);
+    }
+    return { data, labels };
   }
 
   /** gets chart data */
   get series() {
     return [
       {
-        name: "Desktops",
-        data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
+        name: "Requests",
+        data: this.requestsByTime.data,
+        labels: this.requestsByTime.labels
       }
     ];
   }
@@ -33,6 +134,14 @@ export default class TokenGraph extends Vue {
   get chartOptions() {
     return {
       chart: {
+        animations: {
+          enabled: true,
+          easing: "easeinout",
+          dynamicAnimation: {
+            enabled: true,
+            speed: 200
+          }
+        },
         toolbar: {
           show: false
         },
@@ -41,9 +150,6 @@ export default class TokenGraph extends Vue {
         zoom: {
           enabled: false
         }
-      },
-      dataLabels: {
-        enabled: false
       },
       stroke: {
         curve: "smooth"
@@ -55,32 +161,12 @@ export default class TokenGraph extends Vue {
         mode: this.appTheme
       },
       xaxis: {
-        categories: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep"
-        ],
+        categories: this.series[0].labels,
         axisBorder: {
-          show: false,
-          color: "#78909C",
-          height: 1,
-          width: "100%",
-          offsetX: 0,
-          offsetY: 0
+          show: false
         },
         axisTicks: {
-          show: false,
-          borderType: "solid",
-          color: "#78909C",
-          height: 6,
-          offsetX: 0,
-          offsetY: 0
+          show: false
         },
         labels: {
           style: {
@@ -93,11 +179,6 @@ export default class TokenGraph extends Vue {
         show: true,
         opposite: true,
         tickAmount: 2,
-        max:
-          10 +
-          this.series[0].data.reduce((a, b) => {
-            return Math.max(a, b);
-          }),
         axisBorder: {
           show: false
         },
@@ -108,16 +189,25 @@ export default class TokenGraph extends Vue {
           }
         }
       },
+      tooltip: {
+        style: {
+          fontSize: "15px"
+        },
+        y: {
+          formatter: undefined,
+          title: {
+            formatter: (seriesName: string) => ""
+          }
+        }
+      },
       colors: ["#a134ff"],
       fill: {
         type: "gradient",
         gradient: {
           type: "horizontal",
-          shadeIntensity: 1,
           gradientToColors: ["#3448ff", "#137af0", "#a134ff", "#3448ff"],
           opacityFrom: 0.5,
-          opacityTo: 1,
-          colorStops: []
+          opacityTo: 1
         }
       }
     };
@@ -128,5 +218,20 @@ export default class TokenGraph extends Vue {
 <style lang="scss">
 .apexcharts-tooltip {
   box-shadow: none;
+}
+.token-graph {
+  height: 100%;
+  width: 100%;
+}
+
+.timeframe-buttons {
+  padding-top: 5px;
+  width: 100%;
+  text-align: right;
+
+  button {
+    display: inline-block;
+    margin: 0px 3px;
+  }
 }
 </style>

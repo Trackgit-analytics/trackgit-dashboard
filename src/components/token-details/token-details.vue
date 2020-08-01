@@ -73,20 +73,32 @@ export default class TokenDetails extends Vue {
   /** Gets the total number of views for the last 24 hours */
   get viewsLastDay(): string {
     const oneDayInMs = 24 * 60 * 60 * 1000;
-    const timeLogsLastDay = TokenHelper.getTimeLogs(oneDayInMs, this.token);
+    const timeLogsLastDay = TokenHelper.getTimeLogs(
+      this.token,
+      Date.now() - oneDayInMs,
+      Date.now()
+    );
     return NumberHelper.abbreviate(timeLogsLastDay.length);
   }
 
   /** Gets the total number of views for the last 7 days */
   get viewsLastWeek(): string {
     const oneWeekInMs = 24 * 60 * 60 * 1000 * 7;
-    const timeLogsLastWeek = TokenHelper.getTimeLogs(oneWeekInMs, this.token);
+    const timeLogsLastWeek = TokenHelper.getTimeLogs(
+      this.token,
+      Date.now() - oneWeekInMs,
+      Date.now()
+    );
     return NumberHelper.abbreviate(timeLogsLastWeek.length);
   }
 
   /** Gets the all time total number of views */
   get viewsAllTime(): string {
-    const timeLogsAllTime = TokenHelper.getTimeLogs(Infinity, this.token);
+    const timeLogsAllTime = TokenHelper.getTimeLogs(
+      this.token,
+      -Infinity,
+      Date.now()
+    );
     return NumberHelper.abbreviate(timeLogsAllTime.length);
   }
 
@@ -122,15 +134,25 @@ export default class TokenDetails extends Vue {
     min-height: 350px;
     flex-grow: 1;
     box-sizing: border-box;
-    padding-bottom: 20px;
+    padding-bottom: 30px;
   }
 }
 
 @media (max-width: 768px) {
+  .token-details-container {
+    padding-bottom: 10px;
+    height: 100%;
+
+    .graph-container {
+      padding-bottom: 40px;
+    }
+  }
+
   .analytics-container {
     .analytics-card {
       display: block !important;
     }
+    margin-bottom: 20px;
   }
 }
 </style>

@@ -126,26 +126,29 @@ export default class TokenHelper {
    * Get the time logs for the given token for a specific period of time
    * @param timeToPast The maximum time, in milliseconds, between now and the last time log
    * @param token The token whose time logs to get. Returns [] if null token is given
+   * @param startDate (optional - default date.now) The dat to start getting data from
    */
-  public static getTimeLogs(timeToPast: number, token: Token | null): number[] {
+  public static getTimeLogs(
+    token: Token | null,
+    startDate: number,
+    endDate: number
+  ): number[] {
     if (!token) {
       return [];
     }
-    const dateNow = Date.now();
     const timeLogsForPeriod: number[] = [];
 
     for (let i = 0; i < token.tokenRequests.length; i++) {
       const tokenRequest = token.tokenRequests[i];
       if (!tokenRequest) {
         continue;
-      } else if (dateNow - tokenRequest.groupId <= timeToPast) {
+      } else if (
+        endDate >= tokenRequest.groupId &&
+        tokenRequest.groupId >= startDate
+      ) {
         for (let j = 0; j < tokenRequest.timeLogs.length; j++) {
           const timeLog = tokenRequest.timeLogs[j];
-          if (timeLog == null) {
-            continue;
-          } else if (dateNow - timeLog <= timeToPast) {
-            timeLogsForPeriod.push(timeLog);
-          }
+          timeLogsForPeriod.push(timeLog);
         }
       }
     }

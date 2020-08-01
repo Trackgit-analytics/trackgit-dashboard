@@ -1,9 +1,9 @@
 <template>
   <div class="token-details-container">
     <div v-if="loading">
-      <SkeletonLoader height="40px" width="200px" />
+      <SkeletonLoader class="mb-10" height="40px" width="200px" />
       <br />
-      <SkeletonLoader height="25px" width="50px" />
+      <SkeletonLoader class="mb-10" height="25px" width="50px" />
     </div>
     <div v-else class="top-controls">
       <div
@@ -29,10 +29,29 @@
         </h2>
       </div>
       <div>
-        <button class="btn btn-sm" type="button">
+        <button class="btn btn-sm float-left" type="button">
           <i class="fa fa-code mr-5" aria-hidden="true" />
           Embed
         </button>
+        <div class="dropdown float-right with-arrow">
+          <button class="btn" data-toggle="dropdown" type="button">
+            <i class="fa fa-trash" />
+          </button>
+          <div class="dropdown-menu dropdown-menu-right">
+            <h6 class="dropdown-header text-center">
+              This will delete the token permanently
+            </h6>
+            <div class="dropdown-content">
+              <button
+                class="btn btn-danger btn-sm btn-block mt-5"
+                type="button"
+                @click="deleteToken"
+              >
+                Confirm delete
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="analytics-container">
@@ -77,6 +96,7 @@ import TokenModule from "@/store/modules/TokenModule";
 import NumberHelper from "@/helpers/NumberHelper.ts";
 import TokenHelper from "@/helpers/TokenHelper";
 import TokenGraph from "@/components/token-graph/token-graph.vue";
+import Halfmoon from "../../helpers/Halfmoon";
 
 @Component({ components: { TokenGraph } })
 export default class TokenDetails extends Vue {
@@ -142,6 +162,16 @@ export default class TokenDetails extends Vue {
     }
     if (this.token != null && this.tokenName !== this.token.name) {
       await TokenHelper.changeTokenName(this.token, this.tokenName);
+    }
+  }
+
+  /** Delete the current token */
+  async deleteToken() {
+    if (this.token != null) {
+      this.loading = true;
+      await TokenHelper.deleteToken(this.token);
+      Halfmoon.toastSuccess({ content: "Token deleted successfully" });
+      this.loading = false;
     }
   }
 }

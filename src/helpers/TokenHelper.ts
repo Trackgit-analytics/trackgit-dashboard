@@ -167,4 +167,14 @@ export default class TokenHelper {
         .update({ name: newName });
     }
   }
+
+  /**
+   * Delete a token from firestore
+   * @param token The token to delete
+   */
+  public static async deleteToken(token: Token) {
+    await FirebaseModule.db
+      ?.doc(`${CollectionNames.tokens}/${token.id}`)
+      .delete();
+  }
 }

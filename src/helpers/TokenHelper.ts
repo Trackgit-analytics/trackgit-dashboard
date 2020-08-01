@@ -154,4 +154,17 @@ export default class TokenHelper {
     }
     return timeLogsForPeriod;
   }
+
+  /**
+   * Update the token name
+   * @param token The token to change
+   * @param newName The new name to assign
+   */
+  public static async changeTokenName(token: Token, newName: string) {
+    if (newName != null && newName.length > 0) {
+      await FirebaseModule.db
+        ?.doc(`${CollectionNames.tokens}/${token.id}`)
+        .update({ name: newName });
+    }
+  }
 }

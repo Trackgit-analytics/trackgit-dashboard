@@ -6,9 +6,26 @@
       <SkeletonLoader height="25px" width="50px" />
     </div>
     <div v-else class="top-controls">
-      <div class="token-name-container d-inline-block">
+      <div
+        class="token-name-container d-inline-block"
+        data-toggle="tooltip"
+        data-title="Edit token name"
+      >
         <h2 class="mt-0">
-          {{ token.name }}
+          <input
+            type="text"
+            spellcheck="false"
+            contenteditable="true"
+            ref="tokenNameInput"
+            class="form-control form-control-lg"
+            @blur="changeTokenName"
+            v-on:keyup.enter="changeTokenName"
+            v-on:keyup.esc="tokenName = token.name"
+            :value="tokenName"
+            @input="evt => (tokenName = evt.target.value)"
+            :style="`width:calc(${tokenName.length}ch + 3rem) !important`"
+          />
+          <i @click="$refs.tokenNameInput.focus()" class="fa fa-edit" />
         </h2>
       </div>
       <div>
@@ -65,6 +82,8 @@ import TokenGraph from "@/components/token-graph/token-graph.vue";
 export default class TokenDetails extends Vue {
   loading = true;
 
+  tokenName = "";
+
   /** Gets the current active token */
   get token(): Token | null {
     return TokenModule.activeToken;
@@ -108,6 +127,21 @@ export default class TokenDetails extends Vue {
 
     if (newtoken !== null) {
       document.title = `Dashboard - ${newtoken.name}`;
+      this.tokenName = newtoken.name;
+    }
+  }
+
+  /** Change the token name in firestore. Updates token with this.tokenName  */
+  async changeTokenName() {
+    (this.$refs.tokenNameInput as HTMLImageElement).blur();
+
+    this.tokenName = this.tokenName.trim();
+
+    if (this.tokenName.length === 0) {
+      this.tokenName = this.token?.name as string;
+    }
+    if (this.token != null && this.tokenName !== this.token.name) {
+      await TokenHelper.changeTokenName(this.token, this.tokenName);
     }
   }
 }
@@ -130,11 +164,52 @@ export default class TokenDetails extends Vue {
   }
 
   .graph-container {
-    overflow-y: hidden;
+    overflow: hidden;
     min-height: 350px;
     flex-grow: 1;
     box-sizing: border-box;
     padding-bottom: 30px;
+  }
+}
+
+.top-controls {
+  padding-top: 5px;
+
+  .token-name-container {
+    * {
+      display: inline-block;
+    }
+
+    input {
+      font-size: 3.6rem;
+      height: 6rem;
+      background: rgba(0, 0, 0, 0);
+      border: 0px;
+      margin-left: -10px;
+      padding-left: 10px;
+      transition: all 120ms ease;
+      min-width: calc(100px + 3rem);
+    }
+
+    i {
+      cursor: text;
+      margin-top: -5px;
+      margin-left: -3.2rem;
+      font-size: 1.9rem;
+      opacity: 0.3;
+      vertical-align: middle;
+      transition: opacity 120ms ease;
+    }
+
+    &:hover,
+    &:focus-within {
+      i {
+        opacity: 1;
+      }
+      input {
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.3);
+      }
+    }
   }
 }
 

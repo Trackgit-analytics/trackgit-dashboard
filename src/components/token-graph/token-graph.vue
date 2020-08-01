@@ -196,7 +196,7 @@ export default class TokenGraph extends Vue {
         y: {
           formatter: undefined,
           title: {
-            formatter: (seriesName: string) => ""
+            formatter: () => ""
           }
         }
       },

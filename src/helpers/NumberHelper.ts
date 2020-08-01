@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 export default class NumberHelper {
   /**
    * Abbreviate a number into a shortened form

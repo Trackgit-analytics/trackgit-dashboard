@@ -22,8 +22,8 @@
             v-on:keyup.enter="changeTokenName"
             v-on:keyup.esc="tokenName = token.name"
             :value="tokenName"
+            :size="tokenName.length"
             @input="evt => (tokenName = evt.target.value)"
-            :style="`width:calc(${tokenName.length}ch + 3rem) !important`"
           />
           <i @click="$refs.tokenNameInput.focus()" class="fa fa-edit" />
         </h2>
@@ -211,14 +211,15 @@ export default class TokenDetails extends Vue {
     }
 
     input {
-      font-size: 3.6rem;
+      font-size: 3.4rem;
       height: 6rem;
       background: rgba(0, 0, 0, 0);
       border: 0px;
       margin-left: -10px;
       padding-left: 10px;
+      padding-right: 4.5rem;
       transition: all 120ms ease;
-      min-width: calc(100px + 3rem);
+      font-family: "Roboto Mono", monospace;
     }
 
     i {

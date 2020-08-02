@@ -82,6 +82,9 @@ export default class CreateToken extends Vue {
 
     // close modal once process is complete
     this.toggleCreateTokenModal();
+
+    // open embed token modal
+    Halfmoon.toggleModal(ModalID.embedToken);
   }
 }
 </script>

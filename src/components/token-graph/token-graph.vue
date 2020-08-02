@@ -97,12 +97,13 @@ export default class TokenGraph extends Vue {
 
     const dayMilliseconds = 24 * 60 * 60 * 1000 * dayJump;
     const dateObject = new Date();
-    const dateTodayEnd = new Date(
-      `${DateHelper.monthNames[dateObject.getMonth()]} 
+    const dateTodayEnd =
+      new Date(
+        `${DateHelper.monthNames[dateObject.getMonth()]} 
       ${dateObject.getDate()} ${dateObject.getFullYear()} 23:59:59`
-    ).getTime();
+      ).getTime() + 1000;
 
-    for (let i = totalIterations; i >= 0; i--) {
+    for (let i = totalIterations; i > 0; i--) {
       const dateEnd = dateTodayEnd - i * dayMilliseconds;
       const dateStart = dateEnd - dayMilliseconds;
 

@@ -19,7 +19,7 @@
             ref="tokenNameInput"
             class="form-control form-control-lg"
             @blur="changeTokenName"
-            v-on:keyup.enter="changeTokenName"
+            v-on:keyup.enter="$refs.tokenNameInput.blur"
             v-on:keyup.esc="tokenName = token.name"
             :value="tokenName"
             :size="tokenName.length"
@@ -38,7 +38,7 @@
           <i class="fa fa-code mr-5" aria-hidden="true" />
           Embed
         </button>
-        <div class="dropdown float-right with-arrow">
+        <div class="dropdown float-right with-arrow" ref="deleteTokenDropdown">
           <button class="btn" data-toggle="dropdown" type="button">
             <i class="fa fa-trash" />
           </button>
@@ -162,7 +162,7 @@ export default class TokenDetails extends Vue {
   ontokenChanged(newtoken: Token) {
     this.loading = newtoken === null ? true : false;
 
-    if (newtoken !== null) {
+    if (newtoken != null) {
       document.title = `Dashboard - ${newtoken.name}`;
       this.tokenName = newtoken.name;
     }
@@ -171,8 +171,6 @@ export default class TokenDetails extends Vue {
   /** Change the token name in firestore. Updates token with this.tokenName  */
   async changeTokenName() {
     const tokenNameInput = this.$refs.tokenNameInput as HTMLImageElement;
-    tokenNameInput.blur();
-
     this.tokenName = this.tokenName.trim();
 
     if (
@@ -190,6 +188,8 @@ export default class TokenDetails extends Vue {
     ) {
       tokenNameInput.classList.remove("is-invalid");
       await TokenHelper.changeTokenName(this.token, this.tokenName);
+
+      Halfmoon.toastSuccess({ content: "Token name changed successfully!" });
     } else {
       tokenNameInput.classList.add("is-invalid");
     }
@@ -198,6 +198,11 @@ export default class TokenDetails extends Vue {
   /** Delete the current token */
   async deleteToken() {
     if (this.token != null) {
+      // this closes the delete button's "confirm" dropdown
+      (this.$refs.deleteTokenDropdown as HTMLButtonElement).classList.remove(
+        "show"
+      );
+
       this.loading = true;
       await TokenHelper.deleteToken(this.token);
       Halfmoon.toastSuccess({ content: "Token deleted successfully" });

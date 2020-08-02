@@ -111,6 +111,25 @@ export default class Dashboard extends Vue {
     }
   }
 
+  /** Verifies whether the active token exists in the tokenList */
+  @Watch("tokenList")
+  verifyActiveToken() {
+    if (this.activeToken != null && this.tokenList != null) {
+      const tokenExists = this.tokenList
+        .map(token => token.id)
+        .includes(this.activeToken.id);
+
+      if (!tokenExists) {
+        const newActiveToken = this.tokenList[0];
+        TokenModule.updateActiveToken(newActiveToken);
+      } else {
+        TokenModule.updateTokenData(
+          this.tokenList.find(token => token.id === this.activeToken?.id)
+        );
+      }
+    }
+  }
+
   /** Hide the sidebar if it is open */
   closeSidebar() {
     if (SidebarModule.isOpen) {

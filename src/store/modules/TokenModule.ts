@@ -43,6 +43,25 @@ class TokenModule extends VuexModule {
     this.activeToken = token;
   }
 
+  @Mutation
+  private setTokenData(newTokenData: Token) {
+    const existingToken = this.tokens?.find(
+      token => token.id === newTokenData.id
+    );
+    if (existingToken != null) {
+      const tokensToUpdate = [existingToken];
+      if (newTokenData.id === this.activeToken?.id) {
+        tokensToUpdate.push(this.activeToken);
+      }
+      tokensToUpdate.forEach(token => {
+        token.name = newTokenData.name;
+        token.owner = newTokenData.owner;
+        token.shortUrl = newTokenData.shortUrl;
+        token.url = newTokenData.url;
+      });
+    }
+  }
+
   @Action
   public updateTokenList(tokens: Token[]) {
     this.context.commit("setTokens", tokens);
@@ -120,6 +139,11 @@ class TokenModule extends VuexModule {
       }
     }
     this.context.commit("setActiveToken", token);
+  }
+
+  @Action
+  public updateTokenData(newTokenData: Token | undefined) {
+    this.context.commit("setTokenData", newTokenData);
   }
 }
 export default getModule(TokenModule);

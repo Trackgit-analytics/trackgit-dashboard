@@ -45,7 +45,6 @@ import Token from "@/models/interfaces/Token";
 import VueApexCharts from "vue-apexcharts";
 import HalmoonModule from "@/store/modules/HalmoonModule";
 import TokenHelper from "@/helpers/TokenHelper";
-import DeviceHelper from "@/helpers/DeviceHelper.ts";
 import DateHelper from "@/helpers/DateHelper.ts";
 
 Vue.component("ApexCharts", VueApexCharts);

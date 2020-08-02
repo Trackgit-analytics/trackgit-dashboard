@@ -7,7 +7,8 @@ export enum TokenFields {
   owner = "owner",
   url = "url",
   shortUrl = "shortUrl",
-  tokenRequests = "tokenRequests"
+  tokenRequests = "tokenRequests",
+  requestObserver = "requestObserver"
 }
 
 /** Interface for trackgit tokens */
@@ -18,6 +19,7 @@ interface Token {
   [TokenFields.url]: string;
   [TokenFields.shortUrl]: string;
   [TokenFields.tokenRequests]: TokenRequest[];
+  [TokenFields.requestObserver]?: () => void;
 }
 
 export default Token;

@@ -8,75 +8,88 @@ import baseService from "@/services/baseService";
 import { API } from "@/models/data/LinkDirectory";
 import ApiKeys from "@/models/data/ApiKeys";
 import TokenModule from "@/store/modules/TokenModule";
-import Token from "@/models/interfaces/Token";
+import Token, { TokenFields } from "@/models/interfaces/Token";
 import TokenSpec from "@/models/data/TokenSpec";
+import UserModule from "@/store/modules/UserModule";
 
 export default class TokenHelper {
   /**
-   * Get all requests from a token
-   * @param tokenId The token ID whose requests to fetch
+   * Set up a realtime listener for changes in tokens belonging to user.
+   * This listener updates TokenModule tokens as data updates in firestore.
+   * @returns The firestore observer for token updates
    */
-  public static async getTokenRequests(
-    tokenId: string
-  ): Promise<TokenRequest[]> {
-    const requests: TokenRequest[] = [];
-
-    const tokenRequestsSnapShot = await FirebaseModule.db
+  public static setTokensListener() {
+    return FirebaseModule.db
       ?.collection(CollectionNames.tokens)
-      .doc(tokenId)
-      .collection(CollectionNames.requests)
-      .where(TokenRequestFileds.tokenId, "==", tokenId)
-      .get()
-      .catch(() => {
-        Halfmoon.toastError({
-          content: "Couldn't fetch token request list"
-        });
-      });
+      .where(TokenFields.owner, "==", UserModule.user?.uid)
+      .onSnapshot(
+        tokenSnapshot => {
+          const tokens: Token[] = [];
 
-    if (tokenRequestsSnapShot) {
-      tokenRequestsSnapShot?.forEach(doc => {
-        requests.push(doc.data() as TokenRequest);
-      });
-    }
+          tokenSnapshot.forEach(doc => {
+            const { name, owner, url, shortUrl } = doc.data();
+            const requestObserver = TokenHelper.setTokenRequestListener(doc.id);
 
-    return requests;
+            const token: Token = {
+              id: doc.id,
+              name,
+              owner,
+              url,
+              shortUrl,
+              tokenRequests: [],
+              requestObserver
+            };
+            tokens.push(token);
+          });
+
+          TokenModule.updateTokenList(tokens);
+
+          /** If a new document was added, toggle that as the active token */
+          const addedDocs = tokenSnapshot
+            .docChanges()
+            .filter(change => change.type === "added");
+          if (addedDocs.length === 1) {
+            const activeToken = tokens.find(
+              token => token.id === addedDocs[0].doc.id
+            );
+            TokenModule.updateActiveToken(activeToken);
+          }
+        },
+        () => {
+          Halfmoon.toastError({
+            content: "Couldn't fetch token list"
+          });
+        }
+      );
   }
 
   /**
    * Sets up a realtime listener for requests on the token.
    * The listener updates TokenModule as data updates in firestore.
    * @param tokenId The token Id whose requests to listen to
-   * @param tokenName The name of the token (only used for displaying errors)
+   * @returns The firestore observer for request updates
    */
-  public static setTokenRequestListener(tokenId: string, tokenName: string) {
-    FirebaseModule.db
-      ?.collection(CollectionNames.tokens)
-      .doc(tokenId)
+  public static setTokenRequestListener(tokenId: string) {
+    return FirebaseModule.db
+      ?.doc(`${CollectionNames.tokens}/${tokenId}`)
       .collection(CollectionNames.requests)
       .where(TokenRequestFileds.tokenId, "==", tokenId)
-      .onSnapshot(
-        tokenRequestsSnapShot => {
-          const tokenRequests: TokenRequest[] = [];
+      .onSnapshot(tokenRequestsSnapShot => {
+        const tokenRequests: TokenRequest[] = [];
 
-          tokenRequestsSnapShot.forEach(doc => {
-            const tokenRequest = doc.data() as TokenRequest;
+        tokenRequestsSnapShot.forEach(doc => {
+          const tokenRequest = doc.data() as TokenRequest;
 
-            // add the date timestamps to each timelog (ie. decode the timelogs)
-            for (let i = 0; i < tokenRequest.timeLogs.length; i++) {
-              tokenRequest.timeLogs[i] += tokenRequest.groupId;
-            }
+          // add the date timestamps to each timelog (ie. decode the timelogs)
+          for (let i = 0; i < tokenRequest.timeLogs.length; i++) {
+            tokenRequest.timeLogs[i] += tokenRequest.groupId;
+          }
 
-            tokenRequests.push(tokenRequest);
-          });
+          tokenRequests.push(tokenRequest);
+        });
 
-          TokenModule.updateTokenRequests({ tokenId, tokenRequests });
-        },
-        () => {
-          Halfmoon.toastError({
-            content: `Couldn't fetch requests for token: ${tokenName}`
-          });
-        }
-      );
+        TokenModule.updateTokenRequests({ tokenId, tokenRequests });
+      });
   }
 
   /** Generate a random 20-character ID for tokens */
@@ -178,6 +191,13 @@ export default class TokenHelper {
    * @param token The token to delete
    */
   public static async deleteToken(token: Token) {
+    // unsubscribe the token requests observer
+    if (token.requestObserver != null) {
+      token.requestObserver();
+    }
+
+    TokenModule.updateActiveToken(undefined);
+
     await FirebaseModule.db
       ?.doc(`${CollectionNames.tokens}/${token.id}`)
       .delete();

@@ -6,7 +6,7 @@ import {
   getModule
 } from "vuex-module-decorators";
 import store from "@/store";
-import Token, { TokenFields, TokenFirestore } from "@/models/interfaces/Token";
+import Token, { TokenFirestore } from "@/models/interfaces/Token";
 import FirebaseModule from "./FirebaseModule";
 import CollectionNames from "@/models/data/CollectionNames";
 import UserModule from "./UserModule";
@@ -17,15 +17,25 @@ import TokenRequest from "@/models/interfaces/TokenRequest";
 import CookieNames from "@/models/data/CookieNames";
 import Vue from "vue";
 import TokenSpec from "@/models/data/TokenSpec";
+import router from "@/router";
 
 @Module({ dynamic: true, namespaced: true, store, name: "TokenModule" })
 class TokenModule extends VuexModule {
   public tokens: Token[] | null = null;
+
+  /** realtime listener for token documents */
+  public tokensObserver: null | (() => void) = null;
+
   public activeToken: Token | null = null;
 
   @Mutation
   private setTokens(tokens: Token[]) {
     this.tokens = tokens;
+  }
+
+  @Mutation
+  private setTokensObserver(tokensObserver: () => void) {
+    this.tokensObserver = tokensObserver;
   }
 
   @Mutation
@@ -57,36 +67,8 @@ class TokenModule extends VuexModule {
 
   @Action
   public fetchAllTokens() {
-    FirebaseModule.db
-      ?.collection(CollectionNames.tokens)
-      .where(TokenFields.owner, "==", UserModule.user?.uid)
-      .onSnapshot(
-        tokenSnapshot => {
-          const tokens: Token[] = [];
-
-          tokenSnapshot.forEach(doc => {
-            const { name, owner, url, shortUrl } = doc.data();
-            TokenHelper.setTokenRequestListener(doc.id, name);
-
-            const token: Token = {
-              id: doc.id,
-              name,
-              owner,
-              url,
-              shortUrl,
-              tokenRequests: []
-            };
-            tokens.push(token);
-          });
-
-          this.context.commit("setTokens", tokens);
-        },
-        () => {
-          Halfmoon.toastError({
-            content: "Couldn't fetch token list"
-          });
-        }
-      );
+    const tokensObserver = TokenHelper.setTokensListener();
+    this.context.commit("setTokensObserver", tokensObserver);
   }
 
   @Action
@@ -118,14 +100,6 @@ class TokenModule extends VuexModule {
         Halfmoon.toastSuccess({
           content: "Successfully created new token"
         });
-
-        // on success, set the new token as the selected token
-        const addedToken: Token = {
-          id: tokenId,
-          tokenRequests: [],
-          ...newToken
-        };
-        this.context.commit("setActiveToken", addedToken);
       })
       .catch(error => {
         Halfmoon.toastError({
@@ -136,8 +110,15 @@ class TokenModule extends VuexModule {
   }
 
   @Action
-  public updateActiveToken(token: Token) {
-    Vue.$cookies.set(CookieNames.activeTokenId, token.id);
+  public updateActiveToken(token: Token | undefined) {
+    if (token != null) {
+      Vue.$cookies.set(CookieNames.activeTokenId, token.id);
+
+      const newRoute = `/token/${token.id}`;
+      if (router.currentRoute.path !== newRoute) {
+        router.push({ path: newRoute });
+      }
+    }
     this.context.commit("setActiveToken", token);
   }
 }

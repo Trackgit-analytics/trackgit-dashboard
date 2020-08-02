@@ -73,8 +73,11 @@ export default class Dashboard extends Vue {
 
   /** Get the active token from param/cookie and activate the token in module */
   @Watch("tokenList")
-  setActiveToken(tokenList: Token[] | null) {
-    if (tokenList == null) {
+  setActiveToken(tokenList: Token[] | null, oldTokenList: Token[] | null) {
+    if (
+      tokenList == null ||
+      (oldTokenList != null && TokenModule.activeToken != null)
+    ) {
       return;
     }
 
@@ -85,7 +88,6 @@ export default class Dashboard extends Vue {
         TokenModule.updateActiveToken(token);
       } else {
         TokenModule.updateActiveToken(tokenList[0]);
-        this.$router.push({ path: `/token/${tokenList[0].id}` });
       }
       SidebarModule.updateSidebarVisibility(false);
     }
@@ -97,7 +99,6 @@ export default class Dashboard extends Vue {
       if (token) {
         TokenModule.updateActiveToken(token);
         SidebarModule.updateSidebarVisibility(false);
-        this.$router.push({ path: `/token/${token.id}` });
       }
     }
   }

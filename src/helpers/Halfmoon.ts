@@ -38,7 +38,7 @@ export enum HalfmoonFillType {
 export default class Halfmoon {
   private static defaults = {
     /** Default time for halfmoon toast alerts in milliseconds */
-    toastTime: 1000
+    toastTime: 1500
   };
 
   /** Initialize halfmoon ui */

@@ -11,6 +11,7 @@ import TokenModule from "@/store/modules/TokenModule";
 import Token, { TokenFields } from "@/models/interfaces/Token";
 import TokenSpec from "@/models/data/TokenSpec";
 import UserModule from "@/store/modules/UserModule";
+import ModalID from "@/models/data/ModalID";
 
 export default class TokenHelper {
   /**
@@ -53,6 +54,9 @@ export default class TokenHelper {
               token => token.id === addedDocs[0].doc.id
             );
             TokenModule.updateActiveToken(activeToken);
+
+            // open embed token modal
+            setTimeout(() => Halfmoon.toggleModal(ModalID.embedToken), 1000);
           }
         },
         () => {

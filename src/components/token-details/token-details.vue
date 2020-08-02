@@ -30,10 +30,14 @@
         </h2>
       </div>
       <div>
-        <a href="#embed-token" class="btn btn-sm float-left" role="button">
+        <button
+          @click="openEmbedModal"
+          class="btn btn-sm float-left"
+          role="button"
+        >
           <i class="fa fa-code mr-5" aria-hidden="true" />
           Embed
-        </a>
+        </button>
         <div class="dropdown float-right with-arrow">
           <button class="btn" data-toggle="dropdown" type="button">
             <i class="fa fa-trash" />
@@ -99,6 +103,7 @@ import TokenHelper from "@/helpers/TokenHelper";
 import TokenGraph from "@/components/token-graph/token-graph.vue";
 import Halfmoon from "@/helpers/Halfmoon";
 import TokenSpec from "@/models/data/TokenSpec";
+import ModalID from "@/models/data/ModalID.ts";
 
 @Component({ components: { TokenGraph } })
 export default class TokenDetails extends Vue {
@@ -198,6 +203,11 @@ export default class TokenDetails extends Vue {
       Halfmoon.toastSuccess({ content: "Token deleted successfully" });
       this.loading = false;
     }
+  }
+
+  /** Open the embed token modal */
+  openEmbedModal() {
+    Halfmoon.toggleModal(ModalID.embedToken);
   }
 }
 </script>

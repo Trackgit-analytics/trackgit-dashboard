@@ -91,6 +91,7 @@ import SidebarModule from "@/store/modules/SidebarModule.ts";
 import TokenModule from "@/store/modules/TokenModule.ts";
 import Token from "@/models/interfaces/Token";
 import Halfmoon from "@/helpers/Halfmoon";
+import ModalID from "@/models/data/ModalID";
 
 @Component
 export default class Sidebar extends Vue {
@@ -220,7 +221,7 @@ export default class Sidebar extends Vue {
 
   /** Opens the create token form */
   openCreateTokenForm() {
-    Halfmoon.toggleModal("create-token");
+    Halfmoon.toggleModal(ModalID.createToken);
   }
 }
 </script>

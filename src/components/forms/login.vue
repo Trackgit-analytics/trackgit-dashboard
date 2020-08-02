@@ -1,7 +1,7 @@
 <template>
   <div
     class="modal"
-    id="login"
+    :id="loginModalId"
     tabindex="-1"
     role="dialog"
     data-overlay-dismissal-disabled="true"
@@ -66,6 +66,7 @@
 import { Vue, Component } from "vue-property-decorator";
 import { Hyperlinks } from "@/models/data/LinkDirectory.ts";
 import UserHelper from "@/helpers/UserHelper";
+import ModalID from "@/models/data/ModalID";
 
 @Component
 export default class LoginForm extends Vue {
@@ -84,6 +85,11 @@ export default class LoginForm extends Vue {
   /** Hyperlink to register page */
   get registerLink() {
     return Hyperlinks.register;
+  }
+
+  /** Get the login modal ID */
+  get loginModalId(): string {
+    return ModalID.login;
   }
 
   async login() {

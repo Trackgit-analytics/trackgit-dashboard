@@ -5,11 +5,12 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator";
-import FirebaseModule from "./store/modules/FirebaseModule";
-import UserModule from "./store/modules/UserModule";
+import FirebaseModule from "@/store/modules/FirebaseModule";
+import UserModule from "@/store/modules/UserModule";
 import UserHelper from "@/helpers/UserHelper";
-import FormTypes from "./models/data/FormTypes";
+import FormTypes from "@/models/data/FormTypes";
 import Halfmoon from "@/helpers/Halfmoon.ts";
+import ModalID from "@/models/data/ModalID";
 
 require("halfmoon/css/halfmoon.min.css");
 
@@ -32,15 +33,15 @@ export default class App extends Vue {
   async setAuthPrompts() {
     if (UserModule.isUserAuthenticated === false) {
       if (this.$router.currentRoute.path.indexOf(FormTypes.login) != -1) {
-        Halfmoon.toggleModal("login");
+        Halfmoon.toggleModal(ModalID.login);
       } else if (
         this.$router.currentRoute.path.indexOf(FormTypes.register) != -1
       ) {
-        Halfmoon.toggleModal("register");
+        Halfmoon.toggleModal(ModalID.register);
       } else if (UserHelper.isFirstTime()) {
-        Halfmoon.toggleModal("register");
+        Halfmoon.toggleModal(ModalID.register);
       } else {
-        Halfmoon.toggleModal("login");
+        Halfmoon.toggleModal(ModalID.login);
       }
     } else if (UserModule.isUserAuthenticated === true) {
       const currentPath = this.$router.currentRoute.path;

@@ -1,7 +1,7 @@
 <template>
   <div
     class="modal"
-    id="create-token"
+    :id="createTokenModalId"
     tabindex="-1"
     role="dialog"
     :data-overlay-dismissal-disabled="loading"
@@ -52,6 +52,7 @@ import { Vue, Component } from "vue-property-decorator";
 import Halfmoon from "@/helpers/Halfmoon";
 import TokenModule from "@/store/modules/TokenModule";
 import TokenSpec from "@/models/data/TokenSpec";
+import ModalID from "@/models/data/ModalID";
 
 @Component
 export default class CreateToken extends Vue {
@@ -60,12 +61,17 @@ export default class CreateToken extends Vue {
 
   /** Close the create token modal */
   toggleCreateTokenModal() {
-    Halfmoon.toggleModal("create-token");
+    Halfmoon.toggleModal(ModalID.createToken);
   }
 
   /** Maximum allowed length of token names */
   get maxTokenNameSize(): number {
     return TokenSpec.maxTokenNameSize;
+  }
+
+  /** Get the ID for create token modal */
+  get createTokenModalId(): string {
+    return ModalID.createToken;
   }
 
   /** Triggers event in TokenModule to create a new token */

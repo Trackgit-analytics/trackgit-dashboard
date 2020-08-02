@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" id="embed-token" tabindex="-1" role="dialog">
+  <div class="modal" :id="embedModalId" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <a href="#" class="close" role="button" aria-label="Close">
@@ -48,7 +48,9 @@
           </span>
         </code>
         <div class="text-right mt-20">
-          <a href="#" class="btn mr-5" role="button">Close</a>
+          <button @click="closeEmbedModal" class="btn mr-5 btn-block">
+            Close
+          </button>
         </div>
       </div>
     </div>
@@ -59,6 +61,8 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 import Token from "@/models/interfaces/Token";
 import { Hyperlinks } from "@/models/data/LinkDirectory";
+import Halfmoon from "@/helpers/Halfmoon";
+import ModalID from "@/models/data/ModalID";
 
 @Component
 export default class EmbedToken extends Vue {
@@ -67,6 +71,11 @@ export default class EmbedToken extends Vue {
   /** get the link to trackgit landing site */
   get trackgitLink(): string {
     return Hyperlinks.landing;
+  }
+
+  /** Get the embed token modal ID */
+  get embedModalId(): string {
+    return ModalID.embedToken;
   }
 
   /**
@@ -92,6 +101,11 @@ export default class EmbedToken extends Vue {
       elem.innerHTML =
         "<i class='fa fa-clipboard' aria-hidden='true'></i>&nbsp;Copy";
     }, 2000);
+  }
+
+  /** Close the embed token modal */
+  closeEmbedModal() {
+    Halfmoon.toggleModal(ModalID.embedToken);
   }
 }
 </script>

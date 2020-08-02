@@ -30,10 +30,10 @@
         </h2>
       </div>
       <div>
-        <button class="btn btn-sm float-left" type="button">
+        <a href="#embed-token" class="btn btn-sm float-left" role="button">
           <i class="fa fa-code mr-5" aria-hidden="true" />
           Embed
-        </button>
+        </a>
         <div class="dropdown float-right with-arrow">
           <button class="btn" data-toggle="dropdown" type="button">
             <i class="fa fa-trash" />

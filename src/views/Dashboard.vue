@@ -2,6 +2,7 @@
   <div>
     <LoginForm v-if="!isUserAuthenticated" />
     <RegisterForm v-if="!isUserAuthenticated" />
+    <EmbedToken :token="activeToken" v-if="activeToken != null" />
     <CreateToken />
 
     <div
@@ -34,6 +35,7 @@ import CreateToken from "@/components/forms/create-token.vue";
 import TokenDetails from "@/components/token-details/token-details.vue";
 import Token from "@/models/interfaces/Token";
 import CookieNames from "@/models/data/CookieNames";
+import EmbedToken from "@/components/embed-token/embed-token.vue";
 
 @Component({
   components: {
@@ -42,11 +44,12 @@ import CookieNames from "@/models/data/CookieNames";
     LoginForm,
     RegisterForm,
     CreateToken,
-    TokenDetails
+    TokenDetails,
+    EmbedToken
   }
 })
 export default class Dashboard extends Vue {
-  @Prop({ default: "" }) readonly activeToken!: string;
+  @Prop({ default: "" }) readonly activeTokenId!: string;
 
   /** Gets the current auth status of the user */
   get isUserAuthenticated() {
@@ -56,6 +59,11 @@ export default class Dashboard extends Vue {
   /** Gets the list of all tokens in TokenModule */
   get tokenList(): Token[] | null {
     return TokenModule.tokens;
+  }
+
+  /** Gets the currently selected token from TokenModule */
+  get activeToken(): Token | null {
+    return TokenModule.activeToken;
   }
 
   /** Get logged in user's data */
@@ -82,8 +90,8 @@ export default class Dashboard extends Vue {
     }
 
     // check token in url param
-    if (this.activeToken.length > 0) {
-      const token = tokenList.find(token => token.id === this.activeToken);
+    if (this.activeTokenId.length > 0) {
+      const token = tokenList.find(token => token.id === this.activeTokenId);
       if (token != null) {
         TokenModule.updateActiveToken(token);
       } else {

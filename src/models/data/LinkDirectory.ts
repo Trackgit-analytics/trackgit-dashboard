@@ -4,6 +4,7 @@ import FormTypes from "./FormTypes";
  * All hyperlinks used in the project
  */
 export const Hyperlinks = {
+  landing: "https://trackgit.com",
   accountSettings: "/account-settings",
   donate: "https://trackgit.com/donate",
   recoverPassword: "/#forgot-password",

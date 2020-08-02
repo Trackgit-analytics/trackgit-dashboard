@@ -15,7 +15,7 @@ const routes: Array<RouteConfig> = [
     component: Dashboard
   },
   {
-    path: "/token/:activeToken?",
+    path: "/token/:activeTokenId?",
     name: "Dashboard-token",
     props: true,
     meta: PageMeta.Dashboard,

@@ -18,6 +18,7 @@
             <input
               type="text"
               id="token-name"
+              :value="tokenName"
               v-on:input="tokenName = $event.target.value"
               class="form-control"
               placeholder="My awesome repository"
@@ -79,6 +80,8 @@ export default class CreateToken extends Vue {
     this.loading = true;
     await TokenModule.createToken(this.tokenName);
     this.loading = false;
+
+    this.tokenName = "";
 
     // close modal once process is complete
     this.toggleCreateTokenModal();

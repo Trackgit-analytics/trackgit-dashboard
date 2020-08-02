@@ -32,7 +32,7 @@
         @click="selectedPeriod = timeFrames.year"
         type="button"
       >
-        365d
+        12mo
       </button>
     </div>
     <ApexCharts type="line" :options="chartOptions" :series="series" />
@@ -83,12 +83,12 @@ export default class TokenGraph extends Vue {
         totalIterations = 7;
         break;
       case this.timeFrames.month:
-        dayJump = DeviceHelper.isPhone() ? 7 : 1;
-        totalIterations = DeviceHelper.isPhone() ? 4 : 30;
+        dayJump = 1;
+        totalIterations = 30;
         break;
       case this.timeFrames.year:
-        dayJump = DeviceHelper.isPhone() ? 60 : 30;
-        totalIterations = DeviceHelper.isPhone() ? 6 : 12;
+        dayJump = 0;
+        totalIterations = 12;
         break;
       default:
         dayJump = 1;
@@ -104,8 +104,26 @@ export default class TokenGraph extends Vue {
       ).getTime() + 1000;
 
     for (let i = totalIterations; i > 0; i--) {
-      const dateEnd = dateTodayEnd - i * dayMilliseconds;
-      const dateStart = dateEnd - dayMilliseconds;
+      let dateEnd = 0;
+      let dateStart = Infinity;
+      if (this.selectedPeriod === this.timeFrames.year) {
+        dateEnd = new Date(
+          dateObject.getFullYear(),
+          dateObject.getMonth() + 2 - i,
+          0
+        ).getTime();
+
+        dateStart =
+          new Date(
+            dateObject.getFullYear(),
+            dateObject.getMonth() + 1 - i,
+            1
+          ).getTime() -
+          26 * 60 * 60 * 1000;
+      } else {
+        dateEnd = dateTodayEnd - i * dayMilliseconds;
+        dateStart = dateEnd - dayMilliseconds - 1000;
+      }
 
       const timelogs = TokenHelper.getTimeLogs(this.token, dateStart, dateEnd);
       data.push(timelogs.length);
@@ -222,7 +240,7 @@ export default class TokenGraph extends Vue {
 
 <style lang="scss">
 .apexcharts-tooltip {
-  box-shadow: none;
+  box-shadow: none !important;
 }
 .token-graph {
   height: 100%;

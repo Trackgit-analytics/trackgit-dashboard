@@ -16,6 +16,7 @@ import { API } from "@/models/data/LinkDirectory";
 import TokenRequest from "@/models/interfaces/TokenRequest";
 import CookieNames from "@/models/data/CookieNames";
 import Vue from "vue";
+import TokenSpec from "@/models/data/TokenSpec";
 
 @Module({ dynamic: true, namespaced: true, store, name: "TokenModule" })
 class TokenModule extends VuexModule {
@@ -90,7 +91,11 @@ class TokenModule extends VuexModule {
 
   @Action
   public async createToken(tokenName: string) {
-    if (!UserModule.user) {
+    if (
+      !UserModule.user ||
+      tokenName.length < TokenSpec.minTokenNameSize ||
+      tokenName.length > TokenSpec.maxTokenNameSize
+    ) {
       return;
     }
 
@@ -113,7 +118,14 @@ class TokenModule extends VuexModule {
         Halfmoon.toastSuccess({
           content: "Successfully created new token"
         });
-        this.context.commit("setActiveToken", tokenId);
+
+        // on success, set the new token as the selected token
+        const addedToken: Token = {
+          id: tokenId,
+          tokenRequests: [],
+          ...newToken
+        };
+        this.context.commit("setActiveToken", addedToken);
       })
       .catch(error => {
         Halfmoon.toastError({

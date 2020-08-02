@@ -36,6 +36,11 @@ export enum HalfmoonFillType {
 }
 
 export default class Halfmoon {
+  private static defaults = {
+    /** Default time for halfmoon toast alerts in milliseconds */
+    toastTime: 1000
+  };
+
   /** Initialize halfmoon ui */
   public static init() {
     halfmoon.onDOMContentLoaded();
@@ -64,6 +69,9 @@ export default class Halfmoon {
       halfmoon.stickyAlerts = document.getElementsByClassName(
         "sticky-alerts"
       )[0];
+    }
+    if (toastConfig.timeShown == null) {
+      toastConfig.timeShown = this.defaults.toastTime;
     }
     halfmoon.initStickyAlert(toastConfig);
   }

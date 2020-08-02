@@ -23,6 +23,7 @@
             v-on:keyup.esc="tokenName = token.name"
             :value="tokenName"
             :size="tokenName.length"
+            :maxlength="maxTokenNameSize"
             @input="evt => (tokenName = evt.target.value)"
           />
           <i @click="$refs.tokenNameInput.focus()" class="fa fa-edit" />
@@ -96,7 +97,8 @@ import TokenModule from "@/store/modules/TokenModule";
 import NumberHelper from "@/helpers/NumberHelper.ts";
 import TokenHelper from "@/helpers/TokenHelper";
 import TokenGraph from "@/components/token-graph/token-graph.vue";
-import Halfmoon from "../../helpers/Halfmoon";
+import Halfmoon from "@/helpers/Halfmoon";
+import TokenSpec from "@/models/data/TokenSpec";
 
 @Component({ components: { TokenGraph } })
 export default class TokenDetails extends Vue {
@@ -141,6 +143,16 @@ export default class TokenDetails extends Vue {
     return NumberHelper.abbreviate(timeLogsAllTime.length);
   }
 
+  /** Maximum allowed length of token names */
+  get maxTokenNameSize(): number {
+    return TokenSpec.maxTokenNameSize;
+  }
+
+  /** Minimum allowed length of token names */
+  get minTokenNameSize(): number {
+    return TokenSpec.minTokenNameSize;
+  }
+
   @Watch("token")
   ontokenChanged(newtoken: Token) {
     this.loading = newtoken === null ? true : false;
@@ -153,15 +165,28 @@ export default class TokenDetails extends Vue {
 
   /** Change the token name in firestore. Updates token with this.tokenName  */
   async changeTokenName() {
-    (this.$refs.tokenNameInput as HTMLImageElement).blur();
+    const tokenNameInput = this.$refs.tokenNameInput as HTMLImageElement;
+    tokenNameInput.blur();
 
     this.tokenName = this.tokenName.trim();
 
-    if (this.tokenName.length === 0) {
+    if (
+      this.tokenName.length === 0 ||
+      this.token == null ||
+      this.tokenName === this.token.name
+    ) {
       this.tokenName = this.token?.name as string;
+      return;
     }
-    if (this.token != null && this.tokenName !== this.token.name) {
+
+    if (
+      this.tokenName.length >= this.minTokenNameSize &&
+      this.tokenName.length <= this.maxTokenNameSize
+    ) {
+      tokenNameInput.classList.remove("is-invalid");
       await TokenHelper.changeTokenName(this.token, this.tokenName);
+    } else {
+      tokenNameInput.classList.add("is-invalid");
     }
   }
 
@@ -220,6 +245,10 @@ export default class TokenDetails extends Vue {
       padding-right: 4.5rem;
       transition: all 120ms ease;
       font-family: "Roboto Mono", monospace;
+
+      &.is-invalid {
+        box-shadow: 0 0 0 2px #ff4d50a2 !important;
+      }
     }
 
     i {
@@ -257,6 +286,10 @@ export default class TokenDetails extends Vue {
   .analytics-container {
     .analytics-card {
       display: block !important;
+
+      .card {
+        margin-right: 0px !important;
+      }
     }
     margin-bottom: 20px;
   }

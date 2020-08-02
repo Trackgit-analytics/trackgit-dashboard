@@ -9,6 +9,7 @@ import { API } from "@/models/data/LinkDirectory";
 import ApiKeys from "@/models/data/ApiKeys";
 import TokenModule from "@/store/modules/TokenModule";
 import Token from "@/models/interfaces/Token";
+import TokenSpec from "@/models/data/TokenSpec";
 
 export default class TokenHelper {
   /**
@@ -161,7 +162,11 @@ export default class TokenHelper {
    * @param newName The new name to assign
    */
   public static async changeTokenName(token: Token, newName: string) {
-    if (newName != null && newName.length > 0) {
+    if (
+      newName != null &&
+      newName.length >= TokenSpec.minTokenNameSize &&
+      newName.length <= TokenSpec.maxTokenNameSize
+    ) {
       await FirebaseModule.db
         ?.doc(`${CollectionNames.tokens}/${token.id}`)
         .update({ name: newName });

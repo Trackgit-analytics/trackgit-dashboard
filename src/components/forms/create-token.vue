@@ -23,6 +23,7 @@
               placeholder="My awesome repository"
               required="required"
               :disabled="loading"
+              :maxlength="maxTokenNameSize"
             />
           </div>
           <button
@@ -50,6 +51,7 @@
 import { Vue, Component } from "vue-property-decorator";
 import Halfmoon from "@/helpers/Halfmoon";
 import TokenModule from "@/store/modules/TokenModule";
+import TokenSpec from "@/models/data/TokenSpec";
 
 @Component
 export default class CreateToken extends Vue {
@@ -59,6 +61,11 @@ export default class CreateToken extends Vue {
   /** Close the create token modal */
   toggleCreateTokenModal() {
     Halfmoon.toggleModal("create-token");
+  }
+
+  /** Maximum allowed length of token names */
+  get maxTokenNameSize(): number {
+    return TokenSpec.maxTokenNameSize;
   }
 
   /** Triggers event in TokenModule to create a new token */

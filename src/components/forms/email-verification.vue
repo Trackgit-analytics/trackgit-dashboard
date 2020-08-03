@@ -25,6 +25,8 @@ import Halfmoon from "@/helpers/Halfmoon";
 import UserHelper from "@/helpers/UserHelper";
 import UserModule from "@/store/modules/UserModule";
 import EmailMode from "@/models/data/EmailMode";
+import PageMeta from "@/models/data/PageMeta";
+import BodyMetaHelper from "@/helpers/BodyMetaHelper";
 
 @Component
 export default class EmailVerificaitonForm extends Vue {
@@ -49,6 +51,9 @@ export default class EmailVerificaitonForm extends Vue {
     if (mode !== EmailMode.verifyEmail || UserModule.user?.emailVerified) {
       return;
     }
+
+    BodyMetaHelper.setDocumentTitle(PageMeta.EmailVerification.title);
+    BodyMetaHelper.addMetaInfo(PageMeta.EmailVerification.metaTags);
 
     this.loading = true;
 

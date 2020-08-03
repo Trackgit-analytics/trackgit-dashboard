@@ -77,6 +77,8 @@ import UserHelper from "@/helpers/UserHelper";
 import { Hyperlinks } from "@/models/data/LinkDirectory";
 import UserModule from "@/store/modules/UserModule";
 import EmailMode from "@/models/data/EmailMode.ts";
+import BodyMetaHelper from "@/helpers/BodyMetaHelper.ts";
+import PageMeta from "@/models/data/PageMeta";
 
 @Component
 export default class ResetPasswordForm extends Vue {
@@ -122,6 +124,9 @@ export default class ResetPasswordForm extends Vue {
     if (mode !== EmailMode.resetPassword) {
       return;
     }
+
+    BodyMetaHelper.setDocumentTitle(PageMeta.ResetPassword.title);
+    BodyMetaHelper.addMetaInfo(PageMeta.ResetPassword.metaTags);
 
     this.loading = true;
 

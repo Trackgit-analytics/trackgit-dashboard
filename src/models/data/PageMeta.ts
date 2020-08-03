@@ -1,7 +1,13 @@
+import PageMetaTag from "@/models/interfaces/PageMetaTag";
+
 /** Creates a meta object with all necessary information
  * @returns An object containing the meta properties
  */
-function populateMeta(title: string, description: string, image: string) {
+function populateMeta(
+  title: string,
+  description: string,
+  image: string
+): { title: string; metaTags: PageMetaTag[] } {
   // eslint-disable-next-line
   const imageURL = require(`@/assets/${image}`);
   const result = {
@@ -80,6 +86,12 @@ const PageMeta = {
   ResetPassword: populateMeta(
     "Reset password - trackgit",
     "Create a new password for your trackgit account",
+    "metaImage.png"
+  ),
+  /** meta tags for Email verification */
+  EmailVerification: populateMeta(
+    "Verify email - trackgit",
+    "Verifying the email for your trackgit account",
     "metaImage.png"
   ),
   /** meta tags for 404.vue */

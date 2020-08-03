@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from "vue-router";
 import Dashboard from "@/views/Dashboard.vue";
 import PageMeta from "@/models/data/PageMeta";
 import FormTypes from "@/models/data/FormTypes";
+import BodyMetaHelper from "@/helpers/BodyMetaHelper";
 
 Vue.use(VueRouter);
 
@@ -66,27 +67,18 @@ router.beforeEach((to, from, next) => {
     .reverse()
     .find(r => r.meta && r.meta.metaTags);
 
-  if (nearestWithTitle) document.title = nearestWithTitle.meta.title;
-
+  if (nearestWithTitle) {
+    BodyMetaHelper.setDocumentTitle(nearestWithTitle.meta.title);
+  }
   Array.from(
     document.querySelectorAll("[data-vue-router-controlled]")
   ).map(el => el.parentNode?.removeChild(el));
 
-  if (!nearestWithMeta) return next();
+  if (!nearestWithMeta) {
+    return next();
+  }
 
-  nearestWithMeta.meta.metaTags
-    .map((tagDef: { [x: string]: string }) => {
-      const tag = document.createElement("meta");
-
-      Object.keys(tagDef).forEach(key => {
-        tag.setAttribute(key, tagDef[key]);
-      });
-
-      tag.setAttribute("data-vue-router-controlled", "");
-
-      return tag;
-    })
-    .forEach((tag: HTMLMetaElement) => document.head.appendChild(tag));
+  BodyMetaHelper.addMetaInfo(nearestWithMeta.meta.metaTags);
 
   next();
 });

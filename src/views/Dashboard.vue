@@ -47,7 +47,6 @@ import ModalID from "@/models/data/ModalID";
 import { Hyperlinks } from "@/models/data/LinkDirectory";
 import Halfmoon from "@/helpers/Halfmoon.ts";
 import UserHelper from "@/helpers/UserHelper";
-import FormTypes from "@/models/data/FormTypes";
 
 @Component({
   components: {

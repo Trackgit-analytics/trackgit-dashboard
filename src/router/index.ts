@@ -32,6 +32,18 @@ const routes: Array<RouteConfig> = [
     name: "Register",
     meta: PageMeta.Register,
     component: Dashboard
+  },
+  {
+    path: `/${FormTypes.forgotPassword}`,
+    name: "Forgot password",
+    meta: PageMeta.ForgotPassword,
+    component: Dashboard
+  },
+  {
+    path: `/${FormTypes.resetPassword}`,
+    name: "Reset password",
+    meta: PageMeta.ResetPassword,
+    component: Dashboard
   }
 ];
 

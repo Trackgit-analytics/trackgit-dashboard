@@ -63,7 +63,7 @@
           By clicking "Sign up for trackgit", you agree to our
           <a :href="termsLink">Terms of Service</a>.
         </div>
-        <div class="font-size-12 text-danger">
+        <div class="font-size-14 text-danger">
           {{ errorMessage }}
         </div>
         <br />

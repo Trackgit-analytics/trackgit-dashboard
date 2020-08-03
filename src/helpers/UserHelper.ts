@@ -243,6 +243,47 @@ export default class UserHelper {
   }
 
   /**
+   * Verify a password recovery code
+   * @param code The password recovery code
+   * @returns The user's email, if code is valid. Returns undefined otherwise
+   */
+  public static async verifyRecoveryCode(
+    code: string
+  ): Promise<string | undefined> {
+    let userEmail: string | undefined = undefined;
+    try {
+      userEmail = await FirebaseModule.auth?.verifyPasswordResetCode(code);
+    } catch (error) {
+      console.error(error);
+    }
+    return userEmail;
+  }
+
+  /**
+   * Confirm password reset of account
+   * @param code The password recovery code
+   * @param newPassword The new password
+   * @returns An ActionStatus object which indicates whether the action succeeded
+   */
+  public static async confirmPasswordReset(
+    code: string,
+    newPassword: string
+  ): Promise<ActionStatus> {
+    const actionStatus: ActionStatus = {
+      isSuccessful: true
+    };
+
+    await FirebaseModule.auth
+      ?.confirmPasswordReset(code, newPassword)
+      .catch(error => {
+        actionStatus.isSuccessful = false;
+        actionStatus.message = error;
+      });
+
+    return actionStatus;
+  }
+
+  /**
    * Delete the logged in user from firebase
    * @returns An ActionStatus object which indicates whether the action succeeded
    */

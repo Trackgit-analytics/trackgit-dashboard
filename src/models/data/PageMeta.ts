@@ -64,10 +64,22 @@ const PageMeta = {
     "Sign into your trackgit account",
     "metaImage.png"
   ),
-  /** meta tags for Login */
+  /** meta tags for Register */
   Register: populateMeta(
     "Register - trackgit",
     "Create a trackgit account. Sign up using email, or you can also create an account using your Google or Github account.",
+    "metaImage.png"
+  ),
+  /** meta tags for Forgot Password */
+  ForgotPassword: populateMeta(
+    "Forgot password - trackgit",
+    "Get instructions to recover your trackgit password",
+    "metaImage.png"
+  ),
+  /** meta tags for Reset Password */
+  ResetPassword: populateMeta(
+    "Reset password - trackgit",
+    "Create a new password for your trackgit account",
     "metaImage.png"
   ),
   /** meta tags for 404.vue */

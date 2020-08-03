@@ -4,13 +4,9 @@
   </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Watch } from "vue-property-decorator";
+import { Vue, Component } from "vue-property-decorator";
 import FirebaseModule from "@/store/modules/FirebaseModule";
-import UserModule from "@/store/modules/UserModule";
-import UserHelper from "@/helpers/UserHelper";
-import FormTypes from "@/models/data/FormTypes";
 import Halfmoon from "@/helpers/Halfmoon.ts";
-import ModalID from "@/models/data/ModalID";
 
 require("halfmoon/css/halfmoon.min.css");
 
@@ -21,37 +17,6 @@ export default class App extends Vue {
     this.fixViewport();
 
     await FirebaseModule.initializeApp();
-  }
-
-  /** Gets the current auth status of the user */
-  get isUserAuthenticated() {
-    return UserModule.isUserAuthenticated;
-  }
-
-  /** Show authentication prompts if user is not logged in */
-  @Watch("isUserAuthenticated")
-  async setAuthPrompts() {
-    if (UserModule.isUserAuthenticated === false) {
-      if (this.$router.currentRoute.path.indexOf(FormTypes.login) != -1) {
-        Halfmoon.toggleModal(ModalID.login);
-      } else if (
-        this.$router.currentRoute.path.indexOf(FormTypes.register) != -1
-      ) {
-        Halfmoon.toggleModal(ModalID.register);
-      } else if (UserHelper.isFirstTime()) {
-        Halfmoon.toggleModal(ModalID.register);
-      } else {
-        Halfmoon.toggleModal(ModalID.login);
-      }
-    } else if (UserModule.isUserAuthenticated === true) {
-      const currentPath = this.$router.currentRoute.path;
-      if (
-        currentPath.includes(FormTypes.login) ||
-        currentPath.includes(FormTypes.register)
-      ) {
-        this.$router.replace({ path: "/" });
-      }
-    }
   }
 
   /**

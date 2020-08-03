@@ -1,7 +1,12 @@
 <template>
   <div>
-    <LoginForm v-if="!isUserAuthenticated" />
-    <RegisterForm v-if="!isUserAuthenticated" />
+    <span v-if="!isUserAuthenticated">
+      <LoginForm />
+      <RegisterForm />
+      <ForgotPasswordForm />
+      <ResetPasswordForm />
+    </span>
+
     <EmbedToken :token="activeToken" v-if="activeToken != null" />
     <CreateToken />
 
@@ -36,6 +41,13 @@ import TokenDetails from "@/components/token-details/token-details.vue";
 import Token from "@/models/interfaces/Token";
 import CookieNames from "@/models/data/CookieNames";
 import EmbedToken from "@/components/embed-token/embed-token.vue";
+import ForgotPasswordForm from "@/components/forms/forgot-password.vue";
+import ResetPasswordForm from "@/components/forms/reset-password.vue";
+import ModalID from "@/models/data/ModalID";
+import { Hyperlinks } from "@/models/data/LinkDirectory";
+import Halfmoon from "@/helpers/Halfmoon.ts";
+import UserHelper from "@/helpers/UserHelper";
+import FormTypes from "@/models/data/FormTypes";
 
 @Component({
   components: {
@@ -43,6 +55,8 @@ import EmbedToken from "@/components/embed-token/embed-token.vue";
     Sidebar,
     LoginForm,
     RegisterForm,
+    ForgotPasswordForm,
+    ResetPasswordForm,
     CreateToken,
     TokenDetails,
     EmbedToken
@@ -77,6 +91,35 @@ export default class Dashboard extends Vue {
   /** Trigger event to get all tokens for user */
   async fetchAllTokens() {
     await TokenModule.fetchAllTokens();
+  }
+
+  /** Show authentication prompts if user is not logged in */
+  @Watch("isUserAuthenticated")
+  async setAuthPrompts() {
+    const currentPath = this.$router.currentRoute.path;
+    if (UserModule.isUserAuthenticated === false) {
+      switch (currentPath) {
+        case Hyperlinks.login:
+          Halfmoon.toggleModal(ModalID.login);
+          break;
+        case Hyperlinks.register:
+          Halfmoon.toggleModal(ModalID.register);
+          break;
+        case Hyperlinks.forgotPassword:
+          Halfmoon.toggleModal(ModalID.forgotPassword);
+          break;
+        case Hyperlinks.resetPassword:
+          Halfmoon.toggleModal(ModalID.resetPassword);
+          break;
+        default:
+          if (UserHelper.isFirstTime()) {
+            Halfmoon.toggleModal(ModalID.register);
+          } else {
+            Halfmoon.toggleModal(ModalID.login);
+          }
+          break;
+      }
+    }
   }
 
   /** Get the active token from param/cookie and activate the token in module */

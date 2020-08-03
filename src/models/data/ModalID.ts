@@ -5,7 +5,9 @@ const ModalID = {
   login: "login-modal",
   register: "register-modal",
   createToken: "create-token-modal",
-  embedToken: "embed-token-modal"
+  embedToken: "embed-token-modal",
+  forgotPassword: "forgot-password-modal",
+  resetPassword: "reset-password-modal"
 };
 
 export default ModalID;

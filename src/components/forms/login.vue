@@ -47,9 +47,9 @@
           </button>
         </form>
         <div class="text-right mt-10 font-size-12">
-          <a :href="!loading ? recoverPasswordLink : null">Forgot password?</a>
+          <a :href="!loading ? forgotPasswordLink : null">Forgot password?</a>
         </div>
-        <div class="font-size-12 text-danger">
+        <div class="font-size-14 text-danger">
           {{ errorMessage }}
         </div>
         <br />
@@ -78,8 +78,8 @@ export default class LoginForm extends Vue {
   errorMessage = "";
 
   /** Hyperlink to password recovery page */
-  get recoverPasswordLink() {
-    return Hyperlinks.recoverPassword;
+  get forgotPasswordLink() {
+    return Hyperlinks.forgotPassword;
   }
 
   /** Hyperlink to register page */

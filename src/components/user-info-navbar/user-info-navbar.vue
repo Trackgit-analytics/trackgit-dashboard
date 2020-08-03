@@ -105,6 +105,7 @@ export default class UserInfoNavbar extends Vue {
     this.loading = true;
     const actionStatus = await UserHelper.signOut();
     if (actionStatus.isSuccessful) {
+      this.$router.replace({ path: Hyperlinks.login });
       // refresh the page if the user is signed out successfully
       this.$router.go(0);
     } else {

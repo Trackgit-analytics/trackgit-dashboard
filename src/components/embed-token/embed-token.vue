@@ -2,9 +2,9 @@
   <div class="modal" :id="embedModalId" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <a href="#" class="close" role="button" aria-label="Close">
+        <button @click="closeEmbedModal" class="close">
           <span aria-hidden="true">&times;</span>
-        </a>
+        </button>
         <h5 class="modal-title">
           Embed token
           <button

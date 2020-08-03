@@ -6,6 +6,7 @@
       <ForgotPasswordForm />
       <ResetPasswordForm />
     </span>
+    <EmailVerificationForm />
 
     <EmbedToken :token="activeToken" v-if="activeToken != null" />
     <CreateToken />
@@ -47,6 +48,8 @@ import ModalID from "@/models/data/ModalID";
 import { Hyperlinks } from "@/models/data/LinkDirectory";
 import Halfmoon from "@/helpers/Halfmoon.ts";
 import UserHelper from "@/helpers/UserHelper";
+import EmailVerificationForm from "@/components/forms/email-verification.vue";
+import EmailMode from "@/models/data/EmailMode";
 
 @Component({
   components: {
@@ -56,6 +59,7 @@ import UserHelper from "@/helpers/UserHelper";
     RegisterForm,
     ForgotPasswordForm,
     ResetPasswordForm,
+    EmailVerificationForm,
     CreateToken,
     TokenDetails,
     EmbedToken
@@ -107,8 +111,19 @@ export default class Dashboard extends Vue {
         case Hyperlinks.forgotPassword:
           Halfmoon.toggleModal(ModalID.forgotPassword);
           break;
-        case Hyperlinks.resetPassword:
-          Halfmoon.toggleModal(ModalID.resetPassword);
+        case Hyperlinks.emailReferrer:
+          switch (this.$route.query.mode) {
+            case EmailMode.resetPassword:
+              Halfmoon.toggleModal(ModalID.resetPassword);
+              break;
+            case EmailMode.verifyEmail:
+              Halfmoon.toggleModal(ModalID.verifyEmail);
+              break;
+            default:
+              this.$router.push({ path: "/" });
+              this.$router.go(0);
+              break;
+          }
           break;
         default:
           if (UserHelper.isFirstTime()) {

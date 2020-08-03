@@ -40,9 +40,8 @@ const routes: Array<RouteConfig> = [
     component: Dashboard
   },
   {
-    path: `/${FormTypes.resetPassword}`,
-    name: "Reset password",
-    meta: PageMeta.ResetPassword,
+    path: `/${FormTypes.emailReferrer}`,
+    name: "Email referred route",
     component: Dashboard
   }
 ];

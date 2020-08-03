@@ -6,8 +6,8 @@ enum FormTypes {
   register = "register",
   /** for forgot password page */
   forgotPassword = "forgot-password",
-  /** for resetting a lost password */
-  resetPassword = "reset-password"
+  /** forms which come from email links */
+  emailReferrer = "email-referrer"
 }
 
 export default FormTypes;

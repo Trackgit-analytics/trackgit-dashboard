@@ -76,6 +76,7 @@ import ModalID from "@/models/data/ModalID";
 import UserHelper from "@/helpers/UserHelper";
 import { Hyperlinks } from "@/models/data/LinkDirectory";
 import UserModule from "@/store/modules/UserModule";
+import EmailMode from "@/models/data/EmailMode.ts";
 
 @Component
 export default class ResetPasswordForm extends Vue {
@@ -117,6 +118,11 @@ export default class ResetPasswordForm extends Vue {
   /** Verify recovery code and initialize component with data */
   @Watch("isUserAuthenticated")
   async verifyUrlCode() {
+    const mode = this.$route.query.mode;
+    if (mode !== EmailMode.resetPassword) {
+      return;
+    }
+
     this.loading = true;
 
     let isCodeValid = false;

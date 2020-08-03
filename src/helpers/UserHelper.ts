@@ -284,6 +284,24 @@ export default class UserHelper {
   }
 
   /**
+   * Verify user's email
+   * @param code The verification code sent to user
+   * @returns An ActionStatus object which indicates whether the action succeeded
+   */
+  public static async verifyUserEmail(code: string): Promise<ActionStatus> {
+    const actionStatus: ActionStatus = {
+      isSuccessful: true
+    };
+    try {
+      await FirebaseModule.auth?.applyActionCode(code);
+    } catch (error) {
+      actionStatus.message = error;
+      actionStatus.isSuccessful = false;
+    }
+    return actionStatus;
+  }
+
+  /**
    * Delete the logged in user from firebase
    * @returns An ActionStatus object which indicates whether the action succeeded
    */

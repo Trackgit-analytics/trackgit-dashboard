@@ -8,7 +8,7 @@ export const Hyperlinks = {
   accountSettings: "/account-settings",
   donate: "https://trackgit.com/donate",
   forgotPassword: `/${FormTypes.forgotPassword}`,
-  resetPassword: `/${FormTypes.resetPassword}`,
+  emailReferrer: `/${FormTypes.emailReferrer}`,
   login: `/${FormTypes.login}`,
   register: `/${FormTypes.register}`,
   tos: "https://trackgit.com/tos"

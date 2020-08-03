@@ -7,7 +7,8 @@ const ModalID = {
   createToken: "create-token-modal",
   embedToken: "embed-token-modal",
   forgotPassword: "forgot-password-modal",
-  resetPassword: "reset-password-modal"
+  resetPassword: "reset-password-modal",
+  verifyEmail: "email-verification-modal"
 };
 
 export default ModalID;

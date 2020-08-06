@@ -70,75 +70,97 @@ export default class TokenGraph extends Vue {
 
   /** Gets the request data and labels with respect to the selected time period */
   get requestsByTime(): { data: number[]; labels: string[] } {
-    const data: number[] = [];
-    const labels: string[] = [];
-
-    let dayJump: number;
-    let totalIterations: number;
-
     switch (this.selectedPeriod) {
       case this.timeFrames.week:
-        dayJump = 1;
-        totalIterations = 7;
-        break;
+        return this.daysLog(7);
       case this.timeFrames.month:
-        dayJump = 1;
-        totalIterations = 30;
-        break;
-      case this.timeFrames.year:
-        dayJump = 0;
-        totalIterations = 12;
-        break;
+        return this.daysLog(30);
       default:
-        dayJump = 1;
-        totalIterations = 7;
+        return this.monthsLog(12);
+    }
+  }
+
+  /**
+   * Gets the chart data for the given number of days relative to today
+   */
+  daysLog(numberOfDays: number): { data: number[]; labels: string[] } {
+    const dateObj = new Date();
+    const dayMilliseconds = 24 * 60 * 60 * 1000;
+
+    const endOfToday = new Date(
+      dateObj.getFullYear(),
+      dateObj.getMonth(),
+      dateObj.getDate() + 1
+    ).getTime();
+    const startOfToday = endOfToday - dayMilliseconds;
+
+    const graphData = {
+      data: new Array<number>(),
+      labels: new Array<string>()
+    };
+
+    for (let i = numberOfDays; i >= 0; i--) {
+      const endTime = endOfToday - i * dayMilliseconds;
+      const startTime = startOfToday - i * dayMilliseconds;
+
+      const requestCount = TokenHelper.getTimeLogs(
+        this.token,
+        startTime,
+        endTime
+      ).length;
+
+      const startTimeDate = new Date(startTime);
+      const dataLabel = `${startTimeDate.getDate()} 
+      ${DateHelper.monthNames[startTimeDate.getMonth()]}`;
+
+      graphData.data.push(requestCount);
+      graphData.labels.push(dataLabel);
     }
 
-    const dayMilliseconds = 24 * 60 * 60 * 1000 * dayJump;
-    const dateObject = new Date();
-    const dateTodayEnd =
-      new Date(
-        `${DateHelper.monthNames[dateObject.getMonth()]} 
-      ${dateObject.getDate()} ${dateObject.getFullYear()} 23:59:59`
-      ).getTime() + 1000;
+    return graphData;
+  }
 
-    for (let i = totalIterations; i > 0; i--) {
-      let dateEnd = 0;
-      let dateStart = Infinity;
-      if (this.selectedPeriod === this.timeFrames.year) {
-        dateEnd = new Date(
-          dateObject.getFullYear(),
-          dateObject.getMonth() + 2 - i,
+  /**
+   * Gets the chart data for the given number of months relative to current month
+   */
+  monthsLog(numberOfMonths: number): { data: number[]; labels: string[] } {
+    const graphData = {
+      data: new Array<number>(),
+      labels: new Array<string>()
+    };
+
+    const dateObj = new Date();
+    const dayMilliseconds = 24 * 60 * 60 * 1000;
+
+    for (let i = numberOfMonths; i >= 0; i--) {
+      const endTime =
+        new Date(
+          dateObj.getFullYear(),
+          dateObj.getMonth() - i + 1,
           0
-        ).getTime();
+        ).getTime() + dayMilliseconds;
+      const startTime = new Date(
+        dateObj.getFullYear(),
+        dateObj.getMonth() - i,
+        1
+      ).getTime();
 
-        dateStart =
-          new Date(
-            dateObject.getFullYear(),
-            dateObject.getMonth() + 1 - i,
-            1
-          ).getTime() -
-          26 * 60 * 60 * 1000;
-      } else {
-        dateEnd = dateTodayEnd - i * dayMilliseconds;
-        dateStart = dateEnd - dayMilliseconds - 1000;
-      }
+      const requestCount = TokenHelper.getTimeLogs(
+        this.token,
+        startTime,
+        endTime
+      ).length;
 
-      const timelogs = TokenHelper.getTimeLogs(this.token, dateStart, dateEnd);
-      data.push(timelogs.length);
+      const startTimeDate = new Date(startTime);
+      const dateLabel = `
+      ${startTimeDate.getMonth() + 1}
+      /${startTimeDate.getFullYear()}`;
 
-      const labelDate = new Date(dateEnd);
-      let label = "";
-      if (this.selectedPeriod === this.timeFrames.year) {
-        label = `${labelDate.getMonth() + 1}/${labelDate.getFullYear()}`;
-      } else {
-        label = `${labelDate.getDate()} ${
-          DateHelper.monthNames[labelDate.getMonth()]
-        }`;
-      }
-      labels.push(label);
+      graphData.data.push(requestCount);
+      graphData.labels.push(dateLabel);
     }
-    return { data, labels };
+
+    return graphData;
   }
 
   /** gets chart data */

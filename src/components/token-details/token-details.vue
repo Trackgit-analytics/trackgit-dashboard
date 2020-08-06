@@ -97,7 +97,6 @@
 <script lang="ts">
 import { Vue, Component, Watch, Prop } from "vue-property-decorator";
 import Token from "@/models/interfaces/Token";
-import TokenModule from "@/store/modules/TokenModule";
 import NumberHelper from "@/helpers/NumberHelper.ts";
 import TokenHelper from "@/helpers/TokenHelper";
 import TokenGraph from "@/components/token-graph/token-graph.vue";

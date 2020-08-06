@@ -42,7 +42,7 @@ export default class Dashboard extends Vue {
     }
 
     // check token in url param
-    let newActiveToken: Token = undefined as any;
+    let newActiveToken: Token | undefined = undefined;
     if (this.activeTokenId.length > 0) {
       const token = tokenList.find(token => token.id === this.activeTokenId);
       if (token != null) {

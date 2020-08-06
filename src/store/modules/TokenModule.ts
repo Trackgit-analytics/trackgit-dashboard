@@ -17,7 +17,6 @@ import TokenRequest from "@/models/interfaces/TokenRequest";
 import CookieNames from "@/models/data/CookieNames";
 import Vue from "vue";
 import TokenSpec from "@/models/data/TokenSpec";
-import router from "@/router";
 
 @Module({ dynamic: true, namespaced: true, store, name: "TokenModule" })
 class TokenModule extends VuexModule {

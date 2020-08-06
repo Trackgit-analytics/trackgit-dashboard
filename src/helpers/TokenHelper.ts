@@ -11,6 +11,7 @@ import TokenModule from "@/store/modules/TokenModule";
 import Token, { TokenFields } from "@/models/interfaces/Token";
 import TokenSpec from "@/models/data/TokenSpec";
 import UserModule from "@/store/modules/UserModule";
+import router from "@/router";
 
 export default class TokenHelper {
   /**
@@ -43,17 +44,6 @@ export default class TokenHelper {
           });
 
           TokenModule.updateTokenList(tokens);
-
-          /** If a new document was added, toggle that as the active token */
-          const addedDocs = tokenSnapshot
-            .docChanges()
-            .filter(change => change.type === "added");
-          if (addedDocs.length === 1) {
-            const activeToken = tokens.find(
-              token => token.id === addedDocs[0].doc.id
-            );
-            TokenModule.updateActiveToken(activeToken);
-          }
         },
         () => {
           Halfmoon.toastError({
@@ -195,10 +185,24 @@ export default class TokenHelper {
       token.requestObserver();
     }
 
-    TokenModule.updateActiveToken(undefined);
-
     await FirebaseModule.db
       ?.doc(`${CollectionNames.tokens}/${token.id}`)
       .delete();
+  }
+
+  /**
+   * Updates the browser URL route with the token ID
+   * @param token The token whose route to show
+   */
+  public static updateTokenRoute(token: Token | undefined) {
+    let newRoute;
+    if (token != null) {
+      newRoute = `/token/${token.id}`;
+    } else {
+      newRoute = "/";
+    }
+    if (router.currentRoute.path !== newRoute) {
+      router.push({ path: newRoute });
+    }
   }
 }

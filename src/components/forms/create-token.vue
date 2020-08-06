@@ -54,6 +54,7 @@ import Halfmoon from "@/helpers/Halfmoon";
 import TokenModule from "@/store/modules/TokenModule";
 import TokenSpec from "@/models/data/TokenSpec";
 import ModalID from "@/models/data/ModalID";
+import TokenHelper from "@/helpers/TokenHelper";
 
 @Component
 export default class CreateToken extends Vue {
@@ -78,7 +79,10 @@ export default class CreateToken extends Vue {
   /** Triggers event in TokenModule to create a new token */
   async createToken() {
     this.loading = true;
-    await TokenModule.createToken(this.tokenName);
+    const newTokenId = await TokenModule.createToken(this.tokenName);
+    const newToken = TokenModule.tokens?.find(token => token.id === newTokenId);
+    TokenModule.updateActiveToken(newToken);
+    TokenHelper.updateTokenRoute(newToken);
     this.loading = false;
 
     this.tokenName = "";

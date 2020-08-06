@@ -81,6 +81,7 @@ import { Vue, Component } from "vue-property-decorator";
 import { Hyperlinks } from "@/models/data/LinkDirectory.ts";
 import UserHelper from "@/helpers/UserHelper";
 import ModalID from "@/models/data/ModalID";
+import Halfmoon from "@/helpers/Halfmoon";
 
 @Component
 export default class RegisterForm extends Vue {
@@ -105,6 +106,10 @@ export default class RegisterForm extends Vue {
   /** Get the register modal ID */
   get registerModalId(): string {
     return ModalID.register;
+  }
+
+  mounted() {
+    Halfmoon.toggleModal(ModalID.register);
   }
 
   async register() {

@@ -4,6 +4,7 @@ import Dashboard from "@/views/Dashboard.vue";
 import PageMeta from "@/models/data/PageMeta";
 import FormTypes from "@/models/data/FormTypes";
 import BodyMetaHelper from "@/helpers/BodyMetaHelper";
+import { Hyperlinks } from "@/models/data/LinkDirectory";
 
 Vue.use(VueRouter);
 
@@ -44,6 +45,12 @@ const routes: Array<RouteConfig> = [
     path: `/${FormTypes.emailReferrer}`,
     name: "Email referred route",
     component: Dashboard
+  },
+  {
+    path: Hyperlinks.accountSettings,
+    name: "Account settings",
+    meta: PageMeta.AccountSettings,
+    component: () => import("@/views/AccountSettings.vue")
   }
 ];
 

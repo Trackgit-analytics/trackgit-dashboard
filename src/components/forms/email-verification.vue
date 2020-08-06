@@ -44,6 +44,11 @@ export default class EmailVerificaitonForm extends Vue {
     return UserModule.isUserAuthenticated;
   }
 
+  mounted() {
+    Halfmoon.toggleModal(ModalID.verifyEmail);
+    this.verifyEmail();
+  }
+
   /** Verify user's email with code from url */
   @Watch("isUserAuthenticated")
   async verifyEmail() {

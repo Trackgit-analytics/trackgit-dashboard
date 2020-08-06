@@ -35,7 +35,12 @@
         12mo
       </button>
     </div>
-    <ApexCharts type="line" :options="chartOptions" :series="series" />
+    <ApexCharts
+      type="line"
+      v-if="showGraph"
+      :options="chartOptions"
+      :series="series"
+    />
   </div>
 </template>
 
@@ -52,6 +57,8 @@ Vue.component("ApexCharts", VueApexCharts);
 @Component
 export default class TokenGraph extends Vue {
   @Prop({ required: true }) readonly token!: Token;
+
+  showGraph = false;
 
   /** Available time frames to choose from */
   timeFrames = {
@@ -276,6 +283,12 @@ export default class TokenGraph extends Vue {
   button {
     display: inline-block;
     margin: 0px 3px;
+  }
+}
+
+.apexcharts-canvas {
+  svg {
+    background: transparent !important;
   }
 }
 </style>

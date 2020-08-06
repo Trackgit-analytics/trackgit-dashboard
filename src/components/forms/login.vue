@@ -67,6 +67,7 @@ import { Vue, Component } from "vue-property-decorator";
 import { Hyperlinks } from "@/models/data/LinkDirectory.ts";
 import UserHelper from "@/helpers/UserHelper";
 import ModalID from "@/models/data/ModalID";
+import Halfmoon from "@/helpers/Halfmoon";
 
 @Component
 export default class LoginForm extends Vue {
@@ -90,6 +91,10 @@ export default class LoginForm extends Vue {
   /** Get the login modal ID */
   get loginModalId(): string {
     return ModalID.login;
+  }
+
+  mounted() {
+    Halfmoon.toggleModal(ModalID.login);
   }
 
   async login() {

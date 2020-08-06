@@ -51,6 +51,7 @@ import { Vue, Component } from "vue-property-decorator";
 import ModalID from "@/models/data/ModalID";
 import { Hyperlinks } from "@/models/data/LinkDirectory";
 import UserHelper from "@/helpers/UserHelper";
+import Halfmoon from "@/helpers/Halfmoon";
 
 @Component
 export default class ForgotPasswordForm extends Vue {
@@ -71,6 +72,10 @@ export default class ForgotPasswordForm extends Vue {
   /** Get hyperlink to register page */
   get registerLink(): string {
     return Hyperlinks.register;
+  }
+
+  mounted() {
+    Halfmoon.toggleModal(ModalID.forgotPassword);
   }
 
   /** Sends out password recovery link to email */

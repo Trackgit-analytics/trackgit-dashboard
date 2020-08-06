@@ -79,6 +79,7 @@ import UserModule from "@/store/modules/UserModule";
 import EmailMode from "@/models/data/EmailMode.ts";
 import BodyMetaHelper from "@/helpers/BodyMetaHelper.ts";
 import PageMeta from "@/models/data/PageMeta";
+import Halfmoon from "@/helpers/Halfmoon";
 
 @Component
 export default class ResetPasswordForm extends Vue {
@@ -115,6 +116,11 @@ export default class ResetPasswordForm extends Vue {
   /** Hyperlink to password recovery page */
   get forgotPasswordLink() {
     return Hyperlinks.forgotPassword;
+  }
+
+  mounted() {
+    Halfmoon.toggleModal(ModalID.resetPassword);
+    this.verifyUrlCode();
   }
 
   /** Verify recovery code and initialize component with data */

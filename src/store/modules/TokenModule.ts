@@ -91,13 +91,13 @@ class TokenModule extends VuexModule {
   }
 
   @Action
-  public async createToken(tokenName: string) {
+  public async createToken(tokenName: string): Promise<string> {
     if (
       !UserModule.user ||
       tokenName.length < TokenSpec.minTokenNameSize ||
       tokenName.length > TokenSpec.maxTokenNameSize
     ) {
-      return;
+      return "";
     }
 
     const tokenId = TokenHelper.generateNewTokenId();
@@ -126,17 +126,14 @@ class TokenModule extends VuexModule {
         });
         console.error(error);
       });
+
+    return tokenId;
   }
 
   @Action
   public updateActiveToken(token: Token | undefined) {
     if (token != null) {
       Vue.$cookies.set(CookieNames.activeTokenId, token.id);
-
-      const newRoute = `/token/${token.id}`;
-      if (router.currentRoute.path !== newRoute) {
-        router.push({ path: newRoute });
-      }
     }
     this.context.commit("setActiveToken", token);
   }

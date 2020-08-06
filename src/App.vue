@@ -1,22 +1,138 @@
 <template>
   <div id="app">
-    <router-view />
+    <!-- MODALS -->
+    <span v-if="!isUserAuthenticated">
+      <LoginForm v-if="showLogin" />
+      <RegisterForm v-if="showRegister" />
+      <ForgotPasswordForm v-if="showForgotPassword" />
+      <ResetPasswordForm v-if="showResetPassword" />
+    </span>
+    <EmailVerificationForm v-if="showEmailVerification" />
+
+    <EmbedToken :token="activeToken" v-if="activeToken != null" />
+    <CreateToken />
+    <!-- MODALS -->
+
+    <div
+      class="page-wrapper with-navbar with-sidebar"
+      data-sidebar-type="full-height"
+    >
+      <div class="sticky-alerts" />
+
+      <Sidebar />
+
+      <div class="content-wrapper" @click="closeSidebar">
+        <Navbar />
+        <router-view class="content-container" />
+      </div>
+    </div>
   </div>
 </template>
+
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import FirebaseModule from "@/store/modules/FirebaseModule";
+import { Vue, Component, Watch } from "vue-property-decorator";
+import Navbar from "@/components/navbar/navbar.vue";
+import Sidebar from "@/components/sidebar/sidebar.vue";
+import SidebarModule from "@/store/modules/SidebarModule.ts";
+import TokenModule from "@/store/modules/TokenModule.ts";
+import LoginForm from "@/components/forms/login.vue";
+import RegisterForm from "@/components/forms/register.vue";
+import UserModule from "@/store/modules/UserModule";
+import CreateToken from "@/components/forms/create-token.vue";
+import TokenDetails from "@/components/token-details/token-details.vue";
+import CookieNames from "@/models/data/CookieNames";
+import EmbedToken from "@/components/embed-token/embed-token.vue";
+import ForgotPasswordForm from "@/components/forms/forgot-password.vue";
+import ResetPasswordForm from "@/components/forms/reset-password.vue";
+import ModalID from "@/models/data/ModalID";
+import { Hyperlinks } from "@/models/data/LinkDirectory";
 import Halfmoon from "@/helpers/Halfmoon.ts";
+import UserHelper from "@/helpers/UserHelper";
+import EmailVerificationForm from "@/components/forms/email-verification.vue";
+import EmailMode from "@/models/data/EmailMode";
+import FirebaseModule from "@/store/modules/FirebaseModule";
+import Token from "@/models/interfaces/Token";
 
 require("halfmoon/css/halfmoon.min.css");
 
-@Component
+@Component({
+  components: {
+    Navbar,
+    Sidebar,
+    LoginForm,
+    RegisterForm,
+    ForgotPasswordForm,
+    ResetPasswordForm,
+    EmailVerificationForm,
+    CreateToken,
+    TokenDetails,
+    EmbedToken
+  }
+})
 export default class App extends Vue {
-  async mounted() {
+  showLogin = false;
+  showRegister = false;
+  showForgotPassword = false;
+  showResetPassword = false;
+  showEmailVerification = false;
+
+  /** Gets the current auth status of the user */
+  get isUserAuthenticated() {
+    return UserModule.isUserAuthenticated;
+  }
+
+  /** Gets the currently selected token from TokenModule */
+  get activeToken(): Token | null {
+    return TokenModule.activeToken;
+  }
+
+  /** Get logged in user's data */
+  @Watch("isUserAuthenticated")
+  async getUserData(isAuthenticated: boolean) {
+    if (isAuthenticated) {
+      await this.fetchAllTokens();
+    }
+  }
+
+  mounted() {
     Halfmoon.init();
     this.fixViewport();
 
-    await FirebaseModule.initializeApp();
+    FirebaseModule.initializeApp();
+  }
+
+  /** Trigger event to get all tokens for user */
+  async fetchAllTokens() {
+    await TokenModule.fetchAllTokens();
+  }
+
+  /** Show authentication prompts if user is not logged in */
+  @Watch("isUserAuthenticated")
+  async setAuthPrompts(isUserAuthenticated: boolean) {
+    const currentPath = this.$router.currentRoute.path;
+    if (isUserAuthenticated === false) {
+      if (currentPath === "" && UserHelper.isFirstTime()) {
+        this.showRegister = true;
+        return;
+      }
+
+      this.showLogin = currentPath === Hyperlinks.login;
+      this.showRegister = currentPath === Hyperlinks.register;
+      this.showForgotPassword = currentPath === Hyperlinks.forgotPassword;
+
+      if (currentPath === Hyperlinks.emailReferrer) {
+        const emailMode = this.$route.query.mode;
+        this.showResetPassword = emailMode === EmailMode.resetPassword;
+        this.showEmailVerification = emailMode === EmailMode.verifyEmail;
+      }
+    }
+  }
+
+  /** Hide the sidebar if it is open */
+  closeSidebar() {
+    if (SidebarModule.isOpen) {
+      SidebarModule.updateSidebarVisibility(false);
+    }
   }
 
   /**
@@ -105,6 +221,10 @@ a {
   height: 100% !important;
 }
 
+.content-container {
+  height: calc(100% - 8.3rem);
+}
+
 .dark-mode .navbar {
   background: #25282c;
 }
@@ -135,6 +255,10 @@ a {
   -ms-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+.content-wrapper {
+  transition: all 120ms ease;
 }
 
 @media (max-width: 576px) {

@@ -70,7 +70,7 @@
         <div class="sidebar-divider"></div>
         <a
           v-for="miscItem in miscItems"
-          :href="miscItem.url"
+          @click="miscItem.action"
           :key="miscItem.id"
           class="sidebar-link sidebar-link-with-icon"
         >
@@ -92,6 +92,7 @@ import TokenModule from "@/store/modules/TokenModule.ts";
 import Token from "@/models/interfaces/Token";
 import Halfmoon from "@/helpers/Halfmoon";
 import ModalID from "@/models/data/ModalID";
+import TokenHelper from "@/helpers/TokenHelper";
 
 @Component
 export default class Sidebar extends Vue {
@@ -123,10 +124,10 @@ export default class Sidebar extends Vue {
       {
         id: 1,
         name: "Account settings",
-        url: Hyperlinks.accountSettings,
+        action: this.openAccountSettings,
         icon: "fa-cog"
       },
-      { id: 2, name: "Donate", url: Hyperlinks.donate, icon: "fa-heart" }
+      { id: 2, name: "Donate", action: this.openDonatePage, icon: "fa-heart" }
     ];
     const filtered = items.filter(item =>
       this.searchFilter(item.name, this.searchQuery)
@@ -170,10 +171,7 @@ export default class Sidebar extends Vue {
   /** Set a new currently active token and update the url path */
   setActiveToken(token: Token) {
     TokenModule.updateActiveToken(token);
-    const tokenPath = `/token/${token.id}`;
-    if (this.$router.currentRoute.path !== tokenPath) {
-      this.$router.replace({ path: tokenPath });
-    }
+    TokenHelper.updateTokenRoute(token);
     SidebarModule.updateSidebarVisibility(false);
   }
 
@@ -223,13 +221,33 @@ export default class Sidebar extends Vue {
   openCreateTokenForm() {
     Halfmoon.toggleModal(ModalID.createToken);
   }
+
+  /** Open account settings page */
+  openAccountSettings() {
+    this.$router.push({ path: Hyperlinks.accountSettings });
+  }
+
+  /** Redirect to donation page */
+  openDonatePage() {
+    window.location.href = Hyperlinks.donate;
+  }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .sidebar-menu {
   text-align: left;
   z-index: 1;
   position: relative;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 2.5rem 0px;
+  margin: 0px;
+  display: flex;
+  flex-direction: column;
+
+  .token-list {
+    flex-grow: 1;
+  }
 }
 </style>

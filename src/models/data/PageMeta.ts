@@ -94,6 +94,12 @@ const PageMeta = {
     "Verifying the email for your trackgit account",
     "metaImage.png"
   ),
+  /** meta tags for Account settings */
+  AccountSettings: populateMeta(
+    "Account settings",
+    "Change your trackgit account settings",
+    "metaImage.png"
+  ),
   /** meta tags for 404.vue */
   Error404: populateMeta(
     "Error 404",

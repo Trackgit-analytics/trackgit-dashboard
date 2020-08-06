@@ -95,7 +95,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from "vue-property-decorator";
+import { Vue, Component, Watch, Prop } from "vue-property-decorator";
 import Token from "@/models/interfaces/Token";
 import TokenModule from "@/store/modules/TokenModule";
 import NumberHelper from "@/helpers/NumberHelper.ts";
@@ -107,14 +107,11 @@ import ModalID from "@/models/data/ModalID.ts";
 
 @Component({ components: { TokenGraph } })
 export default class TokenDetails extends Vue {
+  @Prop({ required: true }) readonly token!: Token;
+
   loading = true;
 
   tokenName = "";
-
-  /** Gets the current active token */
-  get token(): Token | null {
-    return TokenModule.activeToken;
-  }
 
   /** Gets the total number of views for the last 24 hours */
   get viewsLastDay(): string {
@@ -158,13 +155,14 @@ export default class TokenDetails extends Vue {
     return TokenSpec.minTokenNameSize;
   }
 
-  @Watch("token")
-  ontokenChanged(newtoken: Token) {
-    this.loading = newtoken === null ? true : false;
-
-    if (newtoken != null) {
-      document.title = `Dashboard - ${newtoken.name}`;
-      this.tokenName = newtoken.name;
+  @Watch("token", { immediate: true, deep: true })
+  ontokenChanged() {
+    if (this.token != null) {
+      document.title = `Dashboard - ${this.token.name}`;
+      this.tokenName = this.token.name;
+      this.loading = false;
+    } else {
+      this.loading = true;
     }
   }
 
@@ -222,7 +220,7 @@ export default class TokenDetails extends Vue {
   padding: 0px 6vw;
   display: flex;
   flex-direction: column;
-  height: calc(100% - 8.3rem);
+  height: 100%;
 
   .analytics-container {
     .analytics-card > .card {
@@ -291,7 +289,6 @@ export default class TokenDetails extends Vue {
 @media (max-width: 768px) {
   .token-details-container {
     padding-bottom: 10px;
-    height: 100%;
 
     .graph-container {
       padding-bottom: 40px;

@@ -37,7 +37,7 @@
     </div>
     <ApexCharts
       type="line"
-      v-if="showGraph"
+      height="100%"
       :options="chartOptions"
       :series="series"
     />
@@ -57,8 +57,6 @@ Vue.component("ApexCharts", VueApexCharts);
 @Component
 export default class TokenGraph extends Vue {
   @Prop({ required: true }) readonly token!: Token;
-
-  showGraph = false;
 
   /** Available time frames to choose from */
   timeFrames = {

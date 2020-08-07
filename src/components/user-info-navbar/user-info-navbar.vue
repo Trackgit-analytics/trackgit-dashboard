@@ -21,11 +21,11 @@
       <div class="dropdown-menu dropdown-menu-right">
         <h6 class="dropdown-header ">
           <SkeletonLoader v-if="!isUserAuthenticated" width="100px" />
-          <span class="d-block" v-else>{{ userName }}</span>
+          <span class="d-block" v-else>{{ user.displayName }}</span>
 
           <SkeletonLoader v-if="!isUserAuthenticated" width="130px" />
           <span v-else class="font-size-14 font-weight-normal">{{
-            userEmail
+            user.email
           }}</span>
         </h6>
         <a :href="accountSettingsLink" class="dropdown-item">
@@ -75,20 +75,9 @@ export default class UserInfoNavbar extends Vue {
     return UserModule.isUserAuthenticated ? true : false;
   }
 
-  /** Returns the user's full name */
-  get userName(): string {
-    if (!UserModule.user || !UserModule.user.displayName) {
-      return "";
-    }
-    return UserModule.user.displayName;
-  }
-
-  /** Returns the user's email */
-  get userEmail(): string {
-    if (!UserModule.user || !UserModule.user.email) {
-      return "";
-    }
-    return UserModule.user.email;
+  /** Returns the current user */
+  get user(): firebase.User | null {
+    return UserModule.user;
   }
 
   /** Returns the hyperlink to account settings page */

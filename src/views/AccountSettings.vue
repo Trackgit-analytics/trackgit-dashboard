@@ -153,6 +153,8 @@ export default class AccountSettings extends Vue {
   }
 
   mounted() {
+    this.userName = this.currentUserName;
+
     TokenModule.updateActiveToken(undefined);
   }
 

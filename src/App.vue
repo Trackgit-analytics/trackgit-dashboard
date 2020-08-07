@@ -125,7 +125,6 @@ export default class App extends Vue {
         if (currentPath === Hyperlinks.emailReferrer) {
           const emailMode = this.$route.query.mode;
           this.showResetPassword = emailMode === EmailMode.resetPassword;
-          this.showEmailVerification = emailMode === EmailMode.verifyEmail;
         }
       }
       if (
@@ -137,6 +136,12 @@ export default class App extends Vue {
       ) {
         this.showLogin = true;
       }
+    } else if (
+      isUserAuthenticated &&
+      currentPath === Hyperlinks.emailReferrer
+    ) {
+      this.showEmailVerification =
+        this.$route.query.mode === EmailMode.verifyEmail;
     }
   }
 

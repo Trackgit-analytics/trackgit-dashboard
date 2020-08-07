@@ -51,7 +51,6 @@ import EmailVerificationForm from "@/components/forms/email-verification.vue";
 import EmailMode from "@/models/data/EmailMode";
 import FirebaseModule from "@/store/modules/FirebaseModule";
 import Token from "@/models/interfaces/Token";
-import DeviceHelper from "@/helpers/DeviceHelper";
 
 require("halfmoon/css/halfmoon.min.css");
 

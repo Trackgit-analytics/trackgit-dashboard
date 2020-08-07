@@ -127,13 +127,18 @@ export default class UserHelper {
    * @returns An ActionStatus object which indicates whether the action succeeded
    */
   public static async updateName(newName: string): Promise<ActionStatus> {
-    const userId = FirebaseModule.auth?.currentUser?.uid as string;
     const actionStatus: ActionStatus = {
       isSuccessful: true
     };
+    if (UserModule.user == null) {
+      actionStatus.isSuccessful = false;
+      actionStatus.message = "Please log in to continue.";
+      return actionStatus;
+    }
+    const userId = UserModule.user.uid;
 
-    await FirebaseModule.auth?.currentUser
-      ?.updateProfile({
+    await UserModule.user
+      .updateProfile({
         displayName: newName,
         photoURL: this.avatarUrl.replace("{0}", userId)
       })
@@ -162,29 +167,52 @@ export default class UserHelper {
 
   /**
    * Update a user's password into firebase
-   * @param password The user's password
+   * @param currentPassword The user's current password
+   * @param newPassword The user's new password
    * @returns An ActionStatus object which indicates whether the action succeeded
    */
   public static async updatePassword(
+    currentPassword: string,
     newPassword: string
   ): Promise<ActionStatus> {
     const actionStatus: ActionStatus = {
       isSuccessful: true
     };
-    const userId = FirebaseModule.auth?.currentUser?.uid;
 
-    await FirebaseModule.auth?.currentUser
-      ?.updatePassword(newPassword)
+    if (UserModule.user == null) {
+      actionStatus.isSuccessful = false;
+      actionStatus.message = "Please log in to continue.";
+      return actionStatus;
+    }
+
+    const userId = UserModule.user.uid;
+
+    const credential = firebase.auth.EmailAuthProvider.credential(
+      UserModule.user.email as string,
+      currentPassword
+    );
+
+    await UserModule.user
+      .reauthenticateWithCredential(credential)
       .catch(error => {
         actionStatus.isSuccessful = false;
-        actionStatus.message = error.message;
-        FirebaseModule.analytics?.logEvent(LogTypes.error, {
-          category: LogCategories.auth,
-          user: userId,
-          event: EventTypes.updatePassword,
-          error
-        });
+        actionStatus.message = error;
       });
+
+    if (!actionStatus.isSuccessful) {
+      return actionStatus;
+    }
+
+    await UserModule.user.updatePassword(newPassword).catch(error => {
+      actionStatus.isSuccessful = false;
+      actionStatus.message = error.message;
+      FirebaseModule.analytics?.logEvent(LogTypes.error, {
+        category: LogCategories.auth,
+        user: userId,
+        event: EventTypes.updatePassword,
+        error
+      });
+    });
 
     if (actionStatus.isSuccessful) {
       FirebaseModule.analytics?.logEvent(LogTypes.success, {
@@ -207,12 +235,16 @@ export default class UserHelper {
       isSuccessful: true
     };
 
-    await FirebaseModule.auth?.currentUser
-      ?.sendEmailVerification()
-      .catch(error => {
-        actionStatus.isSuccessful = false;
-        actionStatus.message = error.message;
-      });
+    if (UserModule.user == null) {
+      actionStatus.isSuccessful = false;
+      actionStatus.message = "Please log in to continue.";
+      return actionStatus;
+    }
+
+    await UserModule.user.sendEmailVerification().catch(error => {
+      actionStatus.isSuccessful = false;
+      actionStatus.message = error.message;
+    });
 
     return actionStatus;
   }
@@ -310,12 +342,18 @@ export default class UserHelper {
       isSuccessful: true
     };
 
-    await FirebaseModule.auth?.currentUser?.delete().catch(error => {
+    if (UserModule.user == null) {
+      actionStatus.isSuccessful = false;
+      actionStatus.message = "Please log in to continue.";
+      return actionStatus;
+    }
+
+    await UserModule.user.delete().catch(error => {
       actionStatus.isSuccessful = false;
       actionStatus.message = error.message;
       FirebaseModule.analytics?.logEvent(LogTypes.error, {
         category: LogCategories.auth,
-        user: FirebaseModule.auth?.currentUser?.uid,
+        user: UserModule.user?.uid,
         event: EventTypes.userDelete,
         error
       });

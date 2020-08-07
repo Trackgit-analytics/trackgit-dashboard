@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="account-settings">
     <h2>Account settings</h2>
   </div>
 </template>
@@ -16,4 +16,8 @@ export default class AccountSettings extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.account-settings {
+  padding: 0px 6vw;
+}
+</style>

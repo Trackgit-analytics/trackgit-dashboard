@@ -16,6 +16,7 @@
     <div
       class="page-wrapper with-navbar with-sidebar"
       data-sidebar-type="full-height"
+      id="app-container"
     >
       <div class="sticky-alerts" />
 
@@ -50,6 +51,7 @@ import EmailVerificationForm from "@/components/forms/email-verification.vue";
 import EmailMode from "@/models/data/EmailMode";
 import FirebaseModule from "@/store/modules/FirebaseModule";
 import Token from "@/models/interfaces/Token";
+import DeviceHelper from "@/helpers/DeviceHelper";
 
 require("halfmoon/css/halfmoon.min.css");
 
@@ -109,19 +111,32 @@ export default class App extends Vue {
   async setAuthPrompts(isUserAuthenticated: boolean) {
     const currentPath = this.$router.currentRoute.path;
     if (isUserAuthenticated === false) {
-      if (currentPath === "" && UserHelper.isFirstTime()) {
-        this.showRegister = true;
+      if (currentPath === "/") {
+        if (UserHelper.isFirstTime()) {
+          this.showRegister = true;
+        } else {
+          this.showLogin = true;
+        }
         return;
+      } else {
+        this.showLogin = currentPath === Hyperlinks.login;
+        this.showRegister = currentPath === Hyperlinks.register;
+        this.showForgotPassword = currentPath === Hyperlinks.forgotPassword;
+
+        if (currentPath === Hyperlinks.emailReferrer) {
+          const emailMode = this.$route.query.mode;
+          this.showResetPassword = emailMode === EmailMode.resetPassword;
+          this.showEmailVerification = emailMode === EmailMode.verifyEmail;
+        }
       }
-
-      this.showLogin = currentPath === Hyperlinks.login;
-      this.showRegister = currentPath === Hyperlinks.register;
-      this.showForgotPassword = currentPath === Hyperlinks.forgotPassword;
-
-      if (currentPath === Hyperlinks.emailReferrer) {
-        const emailMode = this.$route.query.mode;
-        this.showResetPassword = emailMode === EmailMode.resetPassword;
-        this.showEmailVerification = emailMode === EmailMode.verifyEmail;
+      if (
+        !this.showLogin &&
+        !this.showRegister &&
+        !this.showForgotPassword &&
+        !this.showResetPassword &&
+        !this.showEmailVerification
+      ) {
+        this.showLogin = true;
       }
     }
   }

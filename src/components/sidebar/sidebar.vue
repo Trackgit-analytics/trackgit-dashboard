@@ -103,6 +103,8 @@ export default class Sidebar extends Vue {
 
   loading = true;
 
+  scrollBehavior = "auto";
+
   /** All hyperlinks for project */
   get Hyperlinks() {
     return Hyperlinks;
@@ -163,9 +165,13 @@ export default class Sidebar extends Vue {
   }
 
   mounted() {
-    this.parentContainer = document.getElementById("dashboard-container");
+    this.parentContainer = document.getElementById("app-container");
     this.sidebarContainer = document.getElementById("sidebar-container");
     this.parentContainer?.addEventListener("scroll", this.setSidebarVisibility);
+
+    // set the initial sidebar visibility when app loads
+    this.toggleSidebar(SidebarModule.isOpen);
+    this.scrollBehavior = "smooth";
   }
 
   /** Set a new currently active token and update the url path */
@@ -185,12 +191,12 @@ export default class Sidebar extends Vue {
       const sidebarWidth = this.sidebarContainer.getBoundingClientRect().width;
       this.parentContainer.scroll({
         left: sidebarWidth,
-        behavior: "smooth"
+        behavior: this.scrollBehavior === "smooth" ? "smooth" : "auto"
       });
     } else {
       this.parentContainer.scroll({
         left: 0,
-        behavior: "smooth"
+        behavior: this.scrollBehavior === "smooth" ? "smooth" : "auto"
       });
     }
   }
@@ -225,6 +231,7 @@ export default class Sidebar extends Vue {
   /** Open account settings page */
   openAccountSettings() {
     this.$router.push({ path: Hyperlinks.accountSettings });
+    SidebarModule.updateSidebarVisibility(false);
   }
 
   /** Redirect to donation page */

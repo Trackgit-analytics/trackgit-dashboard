@@ -9,7 +9,7 @@ import store from "@/store";
 
 @Module({ dynamic: true, namespaced: true, store, name: "SidebarModule" })
 class SidebarModule extends VuexModule {
-  public isOpen = true;
+  public isOpen = false;
 
   @Mutation
   private setIsOpen(isOpen: boolean) {

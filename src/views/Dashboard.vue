@@ -31,12 +31,16 @@ export default class Dashboard extends Vue {
     return TokenModule.tokens;
   }
 
+  mounted() {
+    this.setActiveToken(this.tokenList, null);
+  }
+
   /** Get the active token from param/cookie and activate the token in module */
   @Watch("tokenList")
   setActiveToken(tokenList: Token[] | null, oldTokenList: Token[] | null) {
     if (
       tokenList == null ||
-      (oldTokenList != null && TokenModule.activeToken != null)
+      (oldTokenList != null && this.activeToken != null)
     ) {
       return;
     }

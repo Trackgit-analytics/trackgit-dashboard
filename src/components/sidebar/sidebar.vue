@@ -49,7 +49,7 @@
           @click="setActiveToken(token)"
           :key="token.id"
           :class="
-            `sidebar-link sidebar-link-with-icon ${
+            `sidebar-link token-link sidebar-link-with-icon ${
               activeToken && activeToken.id === token.id ? 'active' : ''
             }`
           "
@@ -57,7 +57,7 @@
           <span class="sidebar-icon">
             <i class="fa fa-code" aria-hidden="true"></i>
           </span>
-          <span class="no-select">{{ token.name }}</span>
+          <span class="no-select token-link-text">{{ token.name }}</span>
         </a>
         <br />
         <br />
@@ -255,6 +255,26 @@ export default class Sidebar extends Vue {
 
   .token-list {
     flex-grow: 1;
+  }
+}
+
+.token-link {
+  max-width: 100%;
+  position: relative;
+  display: flex;
+
+  .sidebar-icon {
+    flex-shrink: 0;
+    min-width: 30px;
+    min-height: 30px;
+  }
+
+  .token-link-text {
+    overflow: hidden;
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 </style>

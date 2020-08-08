@@ -62,7 +62,7 @@ class TokenModule extends VuexModule {
   }
 
   @Action
-  public updateTokenList(tokens: Token[]) {
+  public updateTokenList(tokens: Token[] | undefined) {
     this.context.commit("setTokens", tokens);
   }
 

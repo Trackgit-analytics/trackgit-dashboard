@@ -24,3 +24,9 @@ export const API = {
   /** API endpoint for URL shortener */
   urlShortener: `https://shorturl-sfy-cx.p.rapidapi.com?url={0}`
 };
+
+/** All email addresses used in project */
+export const Emails = {
+  /** Email address for trackgit support */
+  support: "support@trackgit.com"
+};

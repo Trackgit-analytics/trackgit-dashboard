@@ -21,10 +21,15 @@
             class="dropdown-menu dropdown-menu-right"
             aria-labelledby="nav-link-dropdown-toggle"
           >
-            <a href="#" class="dropdown-item">
-              Keyboard shortcuts
+            <a :href="`mailto:${supportEmail}`" class="dropdown-item">
+              Report an issue
             </a>
-            <a href="#" class="dropdown-item">Email support</a>
+            <div class="dropdown-divider"></div>
+            <div class="pt-5 pb-5 text-center">
+              <span class="font-size-12 text-muted">
+                Trackgit {{ yearNow }}
+              </span>
+            </div>
           </div>
         </li>
       </ul>
@@ -48,9 +53,21 @@ import { Vue, Component } from "vue-property-decorator";
 import SidebarModule from "@/store/modules/SidebarModule";
 import UserInfoNavbar from "@/components/user-info-navbar/user-info-navbar.vue";
 import HalfmoonModule from "@/store/modules/HalmoonModule.ts";
+import { Emails } from "@/models/data/LinkDirectory";
 
 @Component({ components: { UserInfoNavbar } })
 export default class Navbar extends Vue {
+  /** get trackgit support email address */
+  get supportEmail(): string {
+    return Emails.support;
+  }
+
+  /** Get the current calendar year */
+  get yearNow(): number {
+    const date = new Date();
+    return date.getFullYear();
+  }
+
   toggleSidebar() {
     SidebarModule.updateSidebarVisibility(!SidebarModule.isOpen);
   }

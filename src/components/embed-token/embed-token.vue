@@ -7,12 +7,8 @@
         </button>
         <h5 class="modal-title">
           Embed token
-          <button
-            class="btn btn-sm float-right"
-            data-toggle="tooltip"
-            data-title="This will add a badge into your Github Readme which will show the total number of views on the repo."
-          >
-            <i class="fa fa-info" />
+          <button class="btn btn-sm float-right" @click="closeEmbedModal">
+            <i class="fa fa-times" />
           </button>
         </h5>
         <p>
@@ -47,10 +43,15 @@
             <span class="hljs-name">&lt;/a&gt;</span>
           </span>
         </code>
-        <div class="text-right mt-20">
-          <button @click="closeEmbedModal" class="btn mr-5 btn-block">
-            Close
-          </button>
+        <div class="mt-20">
+          <a @click="showInfo = !showInfo" class="text-muted">
+            What is this?
+          </a>
+          <span v-if="showInfo" class="d-block">
+            Adding this piece of code into the Github Readme will insert a badge
+            in the Readme which shows the total number of views on the
+            repository.
+          </span>
         </div>
       </div>
     </div>
@@ -67,6 +68,9 @@ import ModalID from "@/models/data/ModalID";
 @Component
 export default class EmbedToken extends Vue {
   @Prop({ required: true }) readonly token!: Token;
+
+  // indicates whether to show the information about tokens
+  showInfo = false;
 
   /** get the link to trackgit landing site */
   get trackgitLink(): string {

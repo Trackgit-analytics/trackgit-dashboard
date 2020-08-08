@@ -205,4 +205,23 @@ export default class TokenHelper {
       router.push({ path: newRoute });
     }
   }
+
+  /** Reset all token data in TokenModule */
+  public static resetData() {
+    // unsubscribe token request listeners
+    TokenModule.tokens?.forEach(token => {
+      if (token.requestObserver) {
+        token.requestObserver();
+      }
+    });
+
+    // unsubscribe token listeners
+    if (TokenModule.tokensObserver) {
+      TokenModule.tokensObserver();
+    }
+
+    // update token lists
+    TokenModule.updateActiveToken(undefined);
+    TokenModule.updateTokenList(undefined);
+  }
 }

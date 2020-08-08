@@ -51,6 +51,7 @@ import EmailVerificationForm from "@/components/forms/email-verification.vue";
 import EmailMode from "@/models/data/EmailMode";
 import FirebaseModule from "@/store/modules/FirebaseModule";
 import Token from "@/models/interfaces/Token";
+import TokenHelper from "@/helpers/TokenHelper";
 
 require("halfmoon/css/halfmoon.min.css");
 
@@ -110,6 +111,8 @@ export default class App extends Vue {
   async setAuthPrompts(isUserAuthenticated: boolean) {
     const currentPath = this.$router.currentRoute.path;
     if (isUserAuthenticated === false) {
+      TokenHelper.resetData();
+
       if (currentPath === "/") {
         if (UserHelper.isFirstTime()) {
           this.showRegister = true;

@@ -15,6 +15,7 @@
         type="button"
         aria-haspopup="true"
         aria-expanded="false"
+        ref="userImageButton"
       >
         <img :src="userProfilePhoto" alt="avatar" />
       </button>
@@ -28,7 +29,7 @@
             user.email
           }}</span>
         </h6>
-        <a :href="accountSettingsLink" class="dropdown-item">
+        <a @click="openAccountSettings" class="dropdown-item">
           Account settings
         </a>
         <div class="dropdown-divider"></div>
@@ -56,6 +57,7 @@ import Halfmoon, {
   HalfmoonFillType
 } from "@/helpers/Halfmoon";
 import Spinner from "@/components/misc/spinner.vue";
+import SidebarModule from "@/store/modules/SidebarModule";
 
 @Component({ components: { Spinner } })
 export default class UserInfoNavbar extends Vue {
@@ -80,23 +82,20 @@ export default class UserInfoNavbar extends Vue {
     return UserModule.user;
   }
 
-  /** Returns the hyperlink to account settings page */
-  get accountSettingsLink(): string {
-    return Hyperlinks.accountSettings;
-  }
-
   /** Sign out the currently logged in user */
   async signOut() {
     if (this.loading) {
       return;
     }
 
+    // closes the dropdown
+    (this.$refs.userImageButton as HTMLButtonElement).click();
+
     this.loading = true;
     const actionStatus = await UserHelper.signOut();
+
     if (actionStatus.isSuccessful) {
       this.$router.replace({ path: Hyperlinks.login });
-      // refresh the page if the user is signed out successfully
-      this.$router.go(0);
     } else {
       Halfmoon.toast({
         content: "Couldn't sign you out. Please try again.",
@@ -105,6 +104,14 @@ export default class UserInfoNavbar extends Vue {
       });
     }
     this.loading = false;
+  }
+
+  /** Open account settings page */
+  openAccountSettings() {
+    this.$router.push({ path: Hyperlinks.accountSettings });
+    SidebarModule.updateSidebarVisibility(false);
+    // closes the dropdown
+    (this.$refs.userImageButton as HTMLButtonElement).click();
   }
 }
 </script>

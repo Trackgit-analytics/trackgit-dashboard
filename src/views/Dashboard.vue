@@ -70,7 +70,10 @@ export default class Dashboard extends Vue {
       } else {
         newActiveToken = tokenList[0];
       }
+    } else {
+      newActiveToken = tokenList[0];
     }
+
     if (newActiveToken != null) {
       TokenModule.updateActiveToken(newActiveToken);
       TokenHelper.updateTokenRoute(newActiveToken);

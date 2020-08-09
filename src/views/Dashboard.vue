@@ -67,6 +67,8 @@ export default class Dashboard extends Vue {
       if (token) {
         newActiveToken = token;
         SidebarModule.updateSidebarVisibility(false);
+      } else {
+        newActiveToken = tokenList[0];
       }
     }
     if (newActiveToken != null) {

@@ -3,7 +3,12 @@
     <div v-if="loading">
       <SkeletonLoader class="mb-10" height="40px" width="200px" />
       <br />
-      <SkeletonLoader class="mb-10" height="25px" width="50px" />
+      <span class="d-inline-block mr-10">
+        <SkeletonLoader class="mb-10" height="25px" width="50px" />
+      </span>
+      <span class="d-inline-block mr-10">
+        <SkeletonLoader class="mb-10" height="25px" width="100px" />
+      </span>
     </div>
     <div v-else class="top-controls">
       <div
@@ -32,11 +37,19 @@
       <div>
         <button
           @click="openEmbedModal"
-          class="btn btn-sm float-left"
+          class="btn btn-sm float-left mr-10"
           role="button"
         >
           <i class="fa fa-code mr-5" aria-hidden="true" />
           Embed
+        </button>
+        <button
+          @click="openOwnershipTransferModal"
+          class="btn btn-sm float-left mr-10"
+          role="button"
+        >
+          <i class="fa fa-user mr-5" aria-hidden="true" />
+          Transfer ownership
         </button>
         <div class="dropdown float-right with-arrow" ref="deleteTokenDropdown">
           <button class="btn" data-toggle="dropdown" type="button">
@@ -210,6 +223,11 @@ export default class TokenDetails extends Vue {
   /** Open the embed token modal */
   openEmbedModal() {
     Halfmoon.toggleModal(ModalID.embedToken);
+  }
+
+  /** Open ownership transfer modal */
+  openOwnershipTransferModal() {
+    Halfmoon.toggleModal(ModalID.ownershipTransfer);
   }
 }
 </script>

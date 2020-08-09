@@ -22,7 +22,10 @@ export const API = {
   tokenPingApi:
     "https://us-central1-trackgit-analytics.cloudfunctions.net/token/ping/{0}",
   /** API endpoint for URL shortener */
-  urlShortener: `https://shorturl-sfy-cx.p.rapidapi.com?url={0}`
+  urlShortener: `https://shorturl-sfy-cx.p.rapidapi.com?url={0}`,
+  /** API to request a transfer of ownership for tokens */
+  tokenOwershipTransfer:
+    "https://us-central1-trackgit-analytics.cloudfunctions.net/token/transfer"
 };
 
 /** All email addresses used in project */

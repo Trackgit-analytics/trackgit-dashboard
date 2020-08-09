@@ -11,6 +11,7 @@
 
     <EmbedToken :token="activeToken" v-if="activeToken != null" />
     <CreateToken />
+    <OwnershipTransfer :token="activeToken" />
     <!-- MODALS -->
 
     <div
@@ -52,6 +53,7 @@ import EmailMode from "@/models/data/EmailMode";
 import FirebaseModule from "@/store/modules/FirebaseModule";
 import Token from "@/models/interfaces/Token";
 import TokenHelper from "@/helpers/TokenHelper";
+import OwnershipTransfer from "@/components/forms/ownership-transfer.vue";
 
 require("halfmoon/css/halfmoon.min.css");
 
@@ -66,7 +68,8 @@ require("halfmoon/css/halfmoon.min.css");
     EmailVerificationForm,
     CreateToken,
     TokenDetails,
-    EmbedToken
+    EmbedToken,
+    OwnershipTransfer
   }
 })
 export default class App extends Vue {

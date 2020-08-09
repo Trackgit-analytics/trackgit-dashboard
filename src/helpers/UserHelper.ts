@@ -427,4 +427,23 @@ export default class UserHelper {
       );
     }
   }
+
+  /**
+   * Get the current user's firebase ID token
+   * @returns a string ID token, or null if fails
+   */
+  public static async getIdToken(): Promise<string | null> {
+    let idToken: string | null = null;
+
+    await FirebaseModule.auth?.currentUser
+      ?.getIdToken(true)
+      .then(authToken => {
+        idToken = authToken;
+      })
+      .catch(() => {
+        idToken = null;
+      });
+
+    return idToken;
+  }
 }

@@ -12,6 +12,8 @@ import Token, { TokenFields } from "@/models/interfaces/Token";
 import TokenSpec from "@/models/data/TokenSpec";
 import UserModule from "@/store/modules/UserModule";
 import router from "@/router";
+import ActionStatus from "@/models/interfaces/ActionStatus";
+import UserHelper from "@/helpers/UserHelper";
 
 export default class TokenHelper {
   /**
@@ -223,5 +225,52 @@ export default class TokenHelper {
     // update token lists
     TokenModule.updateActiveToken(undefined);
     TokenModule.updateTokenList(undefined);
+  }
+
+  /**
+   * Transfer ownership of token to another user
+   * @param tokenId The token Id of the token to transfer
+   * @param newUserEmail  The firebase email of the user to transfer the token to
+   * @returns An ActionStatus object which indicates whether the action succeeded
+   */
+  public static async transferOwnership(
+    tokenId: string,
+    newUserEmail: string
+  ): Promise<ActionStatus> {
+    const actionStatus: ActionStatus = {
+      isSuccessful: true
+    };
+
+    const tokenExists = TokenModule.tokens?.find(token => token.id === tokenId);
+    if (!tokenExists) {
+      actionStatus.isSuccessful = false;
+      actionStatus.message = "The token does not exist";
+      return actionStatus;
+    }
+
+    const apiData = {
+      tokenId,
+      newUserEmail
+    };
+
+    const apiHeader = {
+      usertoken: await UserHelper.getIdToken()
+    };
+    await baseService
+      .post(API.tokenOwershipTransfer, apiData, {
+        headers: apiHeader
+      })
+      .then(response => {
+        actionStatus.isSuccessful = true;
+        actionStatus.message = response.data;
+      })
+      .catch(error => {
+        actionStatus.isSuccessful = false;
+        if (error.response) {
+          actionStatus.message = error.response.data;
+        }
+      });
+
+    return actionStatus;
   }
 }

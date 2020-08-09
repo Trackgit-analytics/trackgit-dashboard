@@ -76,7 +76,10 @@ export default class Dashboard extends Vue {
 
     if (newActiveToken != null) {
       TokenModule.updateActiveToken(newActiveToken);
-      TokenHelper.updateTokenRoute(newActiveToken);
+
+      if (this.$router.currentRoute.path === "/") {
+        TokenHelper.updateTokenRoute(newActiveToken);
+      }
     }
   }
 

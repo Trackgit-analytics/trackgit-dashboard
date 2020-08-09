@@ -14,6 +14,9 @@ import FirebaseModule from "./FirebaseModule";
 class UserModule extends VuexModule {
   public user: firebase.User | null = null;
 
+  // Github access token for user, only initialized when user signs in with Github
+  public userGithubToken: string | null = null;
+
   /**
    * If the user is logged in returns true, false if the user isn't logged in.
    * A null status indicates that firebase hasn't initialized yet.
@@ -30,6 +33,11 @@ class UserModule extends VuexModule {
     this.isUserAuthenticated = isAuthenticated;
   }
 
+  @Mutation
+  private setGithubToken(githubToken: string) {
+    this.userGithubToken = githubToken;
+  }
+
   @Action
   public updateUser(user: firebase.User | null) {
     if (user != null) {
@@ -40,6 +48,11 @@ class UserModule extends VuexModule {
       this.context.commit("setAuthenticated", false);
     }
     this.context.commit("setUser", user);
+  }
+
+  @Action
+  public updateUserGithubToken(githubToken: string) {
+    this.context.commit("setGithubToken", githubToken);
   }
 }
 export default getModule(UserModule);

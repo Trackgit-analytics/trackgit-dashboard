@@ -12,6 +12,12 @@
         <h5 class="modal-title text-muted font-weight-bold font-size-16">
           Create a new account
         </h5>
+        <div class="text-center">
+          <GithubSignin>
+            Sign up with GitHub
+          </GithubSignin>
+          <br />
+        </div>
         <form v-on:submit.prevent="register">
           <div class="form-group">
             <label for="register-name">Name</label>
@@ -56,7 +62,8 @@
             :class="`btn btn-primary btn-block ${loading ? 'disabled' : null}`"
             type="submit"
           >
-            Sign up for trackgit <Spinner v-if="loading" />
+            Create account
+            <Spinner v-if="loading" />
           </button>
         </form>
         <div class="text-muted font-size-12 mt-20">
@@ -82,8 +89,9 @@ import { Hyperlinks } from "@/models/data/LinkDirectory.ts";
 import UserHelper from "@/helpers/UserHelper";
 import ModalID from "@/models/data/ModalID";
 import Halfmoon from "@/helpers/Halfmoon";
+import GithubSignin from "@/components/forms/github-signin.vue";
 
-@Component
+@Component({ components: { GithubSignin } })
 export default class RegisterForm extends Vue {
   loading = false;
   redirectUrl = "/";

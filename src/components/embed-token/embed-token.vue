@@ -7,9 +7,6 @@
         </button>
         <h5 class="modal-title">
           Embed token
-          <button class="btn btn-sm float-right" @click="closeEmbedModal">
-            <i class="fa fa-times" />
-          </button>
         </h5>
         <p>
           Copy and paste the code below into your repository's
@@ -47,6 +44,9 @@
           <a @click="showInfo = !showInfo" class="text-muted">
             What is this?
           </a>
+          <button class="btn float-right" @click="closeEmbedModal">
+            Close
+          </button>
           <span v-if="showInfo" class="d-block">
             Adding this piece of code into the Github Readme will insert a badge
             in the Readme which shows the total number of views on the

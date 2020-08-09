@@ -1,5 +1,5 @@
 import Halfmoon from "./Halfmoon";
-import firebase from "firebase";
+import firebase from "firebase/app";
 
 export default class FirebaseHelper {
   /**

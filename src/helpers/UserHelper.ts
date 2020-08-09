@@ -1,5 +1,5 @@
 import FirebaseModule from "@/store/modules/FirebaseModule";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import EventTypes from "@/models/data/EventTypes";
 import ActionStatus from "@/models/interfaces/ActionStatus";
 import LogCategories from "@/models/data/LogCategories";

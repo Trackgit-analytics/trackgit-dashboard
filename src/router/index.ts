@@ -51,6 +51,12 @@ const routes: Array<RouteConfig> = [
     name: "Account settings",
     meta: PageMeta.AccountSettings,
     component: () => import("@/views/AccountSettings.vue")
+  },
+  {
+    path: "*",
+    name: "Error404",
+    meta: PageMeta.Error404,
+    component: () => import("@/views/Error404.vue")
   }
 ];
 

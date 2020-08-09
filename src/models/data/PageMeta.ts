@@ -61,7 +61,7 @@ const PageMeta = {
   /** meta tags for Dashboard.vue */
   Dashboard: populateMeta(
     "Dashboard - trackgit",
-    "Supercharge your Github respositories with audience traffic analytics. Get insights like number of views, traffic location, visits over time, and more in just a few clicks.",
+    "Supercharge your Github respositories with traffic analytics. Get insights like number of views over time in just a few clicks. And it's all free!",
     "metaImage.png"
   ),
   /** meta tags for Login */
@@ -73,7 +73,7 @@ const PageMeta = {
   /** meta tags for Register */
   Register: populateMeta(
     "Register - trackgit",
-    "Create a trackgit account. Sign up using email, or you can also create an account using your Google or Github account.",
+    "Create an account to get the best out of your experience with trackgit.",
     "metaImage.png"
   ),
   /** meta tags for Forgot Password */

@@ -73,7 +73,7 @@ const PageMeta = {
   /** meta tags for Register */
   Register: populateMeta(
     "Register - trackgit",
-    "Create a trackgit account. Sign up using email, or you can also create an account using your Google or Github account.",
+    "Create an account to get the best out of your experience with trackgit.",
     "metaImage.png"
   ),
   /** meta tags for Forgot Password */

@@ -1,6 +1,7 @@
 <template>
   <div id="dashboard">
-    <TokenDetails :token.sync="activeToken" />
+    <NoTokens v-if="tokenList != null && tokenList.length === 0" />
+    <TokenDetails v-else :token.sync="activeToken" />
   </div>
 </template>
 
@@ -12,10 +13,12 @@ import Token from "@/models/interfaces/Token";
 import SidebarModule from "@/store/modules/SidebarModule";
 import CookieNames from "@/models/data/CookieNames";
 import TokenHelper from "@/helpers/TokenHelper";
+import NoTokens from "@/components/no-tokens/no-tokens.vue";
 
 @Component({
   components: {
-    TokenDetails
+    TokenDetails,
+    NoTokens
   }
 })
 export default class Dashboard extends Vue {

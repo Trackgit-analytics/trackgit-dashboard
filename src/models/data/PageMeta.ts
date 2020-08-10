@@ -61,7 +61,7 @@ const PageMeta = {
   /** meta tags for Dashboard.vue */
   Dashboard: populateMeta(
     "Dashboard - trackgit",
-    "Supercharge your Github respositories with traffic analytics. Get insights like number of views over time in just a few clicks. And it's all free!",
+    "Supercharge your Github respositories with audience traffic analytics. Get insights like number of views, visits over time, and more in just a few clicks. And it's all free!",
     "metaImage.png"
   ),
   /** meta tags for Login */

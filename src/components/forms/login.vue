@@ -12,6 +12,12 @@
         <h5 class="modal-title text-muted font-weight-bold font-size-16">
           Sign into your account
         </h5>
+        <div class="text-center">
+          <GithubSignin>
+            Sign in with GitHub
+          </GithubSignin>
+          <br />
+        </div>
         <form v-on:submit.prevent="login">
           <div class="form-group">
             <label for="login-email">Email</label>
@@ -68,8 +74,9 @@ import { Hyperlinks } from "@/models/data/LinkDirectory.ts";
 import UserHelper from "@/helpers/UserHelper";
 import ModalID from "@/models/data/ModalID";
 import Halfmoon from "@/helpers/Halfmoon";
+import GithubSignin from "@/components/forms/github-signin.vue";
 
-@Component
+@Component({ components: { GithubSignin } })
 export default class LoginForm extends Vue {
   loading = false;
   redirectUrl = "/";
@@ -97,6 +104,7 @@ export default class LoginForm extends Vue {
     Halfmoon.toggleModal(ModalID.login);
   }
 
+  /** Attempt user login with email/password */
   async login() {
     if (this.loading) {
       return;

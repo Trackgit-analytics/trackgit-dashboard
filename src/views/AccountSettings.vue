@@ -52,7 +52,7 @@
 
     <br />
 
-    <form v-on:submit.prevent="changeUserPassword">
+    <form v-on:submit.prevent="changeUserPassword" v-if="!isGithubUser">
       <h5>Change account password</h5>
       <div class="form-group">
         <label for="current-password">Current password</label>
@@ -145,6 +145,11 @@ export default class AccountSettings extends Vue {
       return UserModule.user.displayName as string;
     }
     return "";
+  }
+
+  /** Get whether the user is authorized with Github  */
+  get isGithubUser(): boolean {
+    return UserModule.user?.providerData[0]?.providerId === "github.com";
   }
 
   @Watch("currentUserName")

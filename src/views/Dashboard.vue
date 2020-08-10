@@ -14,6 +14,7 @@ import SidebarModule from "@/store/modules/SidebarModule";
 import CookieNames from "@/models/data/CookieNames";
 import TokenHelper from "@/helpers/TokenHelper";
 import NoTokens from "@/components/no-tokens/no-tokens.vue";
+import { Hyperlinks } from "@/models/data/LinkDirectory";
 
 @Component({
   components: {
@@ -76,7 +77,10 @@ export default class Dashboard extends Vue {
 
     if (newActiveToken != null) {
       TokenModule.updateActiveToken(newActiveToken);
-      TokenHelper.updateTokenRoute(newActiveToken);
+
+      if (this.$router.currentRoute.path !== Hyperlinks.emailReferrer) {
+        TokenHelper.updateTokenRoute(newActiveToken);
+      }
     }
   }
 

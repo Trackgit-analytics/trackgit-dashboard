@@ -8,7 +8,8 @@ const ModalID = {
   embedToken: "embed-token-modal",
   forgotPassword: "forgot-password-modal",
   resetPassword: "reset-password-modal",
-  verifyEmail: "email-verification-modal"
+  verifyEmail: "email-verification-modal",
+  ownershipTransfer: "ownership-transfer-modal"
 };
 
 export default ModalID;

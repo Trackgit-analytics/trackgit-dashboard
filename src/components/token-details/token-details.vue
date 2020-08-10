@@ -3,7 +3,12 @@
     <div v-if="loading">
       <SkeletonLoader class="mb-10" height="40px" width="200px" />
       <br />
-      <SkeletonLoader class="mb-10" height="25px" width="50px" />
+      <span class="d-inline-block mr-10">
+        <SkeletonLoader class="mb-10" height="25px" width="50px" />
+      </span>
+      <span class="d-inline-block mr-10">
+        <SkeletonLoader class="mb-10" height="25px" width="100px" />
+      </span>
     </div>
     <div v-else class="top-controls">
       <div
@@ -22,7 +27,7 @@
             v-on:keyup.enter="$refs.tokenNameInput.blur"
             v-on:keyup.esc="tokenName = token.name"
             :value="tokenName"
-            :size="tokenName.length"
+            :size="tokenName.length + 2"
             :maxlength="maxTokenNameSize"
             @input="evt => (tokenName = evt.target.value)"
           />
@@ -32,11 +37,19 @@
       <div>
         <button
           @click="openEmbedModal"
-          class="btn btn-sm float-left"
+          class="btn btn-sm float-left mr-10"
           role="button"
         >
           <i class="fa fa-code mr-5" aria-hidden="true" />
           Embed
+        </button>
+        <button
+          @click="openOwnershipTransferModal"
+          class="btn btn-sm float-left mr-10"
+          role="button"
+        >
+          <i class="fa fa-user mr-5" aria-hidden="true" />
+          Transfer ownership
         </button>
         <div class="dropdown float-right with-arrow" ref="deleteTokenDropdown">
           <button class="btn" data-toggle="dropdown" type="button">
@@ -211,6 +224,11 @@ export default class TokenDetails extends Vue {
   openEmbedModal() {
     Halfmoon.toggleModal(ModalID.embedToken);
   }
+
+  /** Open ownership transfer modal */
+  openOwnershipTransferModal() {
+    Halfmoon.toggleModal(ModalID.ownershipTransfer);
+  }
 }
 </script>
 
@@ -254,7 +272,6 @@ export default class TokenDetails extends Vue {
       border: 0px;
       margin-left: -10px;
       padding-left: 10px;
-      padding-right: 4.5rem;
       transition: all 120ms ease;
       font-family: "Roboto Mono", monospace;
 
@@ -266,7 +283,7 @@ export default class TokenDetails extends Vue {
     i {
       cursor: text;
       margin-top: -5px;
-      margin-left: -3.2rem;
+      margin-left: calc((2ch + 1.9rem - 5px) * (-1));
       font-size: 1.9rem;
       opacity: 0.3;
       vertical-align: middle;
@@ -303,6 +320,19 @@ export default class TokenDetails extends Vue {
       }
     }
     margin-bottom: 20px;
+  }
+
+  .top-controls {
+    .token-name-container {
+      input {
+        font-size: 2.6rem;
+      }
+      i {
+        font-size: 1.4rem;
+        margin-top: 2px;
+        margin-left: calc((2ch + 1.6rem - 5px) * (-1));
+      }
+    }
   }
 }
 </style>

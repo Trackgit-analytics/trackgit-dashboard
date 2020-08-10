@@ -7,6 +7,7 @@ import ActionTypes from "@/models/data/ActionTypes";
 import Vue from "vue";
 import UserModule from "@/store/modules/UserModule";
 import LogTypes from "@/models/data/LogTypes";
+import DeviceHelper from "@/helpers/DeviceHelper";
 
 export default class UserHelper {
   private static avatarUrl =
@@ -45,6 +46,48 @@ export default class UserHelper {
         event: EventTypes.login,
         category: LogCategories.auth
       });
+    }
+
+    return actionStatus;
+  }
+
+  /**
+   * Initiates a login/signup process with GitHub
+   * @returns An ActionStatus object which indicates whether the action succeeded
+   */
+  public static async signInWithGithub(): Promise<ActionStatus> {
+    const actionStatus: ActionStatus = {
+      isSuccessful: true
+    };
+    const provider = new firebase.auth.GithubAuthProvider();
+    provider.addScope("read:user,user:email");
+
+    // callback when github authentication succeeds
+    function authSuccess(result: firebase.auth.UserCredential) {
+      const githubToken = (result.credential as firebase.auth.OAuthCredential)
+        .accessToken;
+      if (githubToken != null) {
+        UserModule.updateUserGithubToken(githubToken);
+      }
+    }
+    // callback when github authentication fails
+    function authFailure(error: string) {
+      actionStatus.isSuccessful = false;
+      actionStatus.message = error;
+    }
+
+    // use popup auth in desktop, use redirect auth in mobile
+    if (DeviceHelper.isPhone()) {
+      await FirebaseModule.auth?.signInWithRedirect(provider);
+      await FirebaseModule.auth
+        ?.getRedirectResult()
+        .then(result => authSuccess(result))
+        .catch(error => authFailure(error));
+    } else {
+      await FirebaseModule.auth
+        ?.signInWithPopup(provider)
+        .then(result => authSuccess(result))
+        .catch(error => authFailure(error));
     }
 
     return actionStatus;
@@ -383,5 +426,24 @@ export default class UserHelper {
         UserModule.updateUser(user)
       );
     }
+  }
+
+  /**
+   * Get the current user's firebase ID token
+   * @returns a string ID token, or null if fails
+   */
+  public static async getIdToken(): Promise<string | null> {
+    let idToken: string | null = null;
+
+    await FirebaseModule.auth?.currentUser
+      ?.getIdToken(true)
+      .then(authToken => {
+        idToken = authToken;
+      })
+      .catch(() => {
+        idToken = null;
+      });
+
+    return idToken;
   }
 }

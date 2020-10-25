@@ -26,6 +26,8 @@
   <ul>
     <li><b>Google firebase auth</b> - logging in users with email/password or Github profiles.</li>
     <li><b>Google firestore</b> - storing and processing user-generated data.</li>
+    <li><b>GitHub actions</b> - CI/CD to firebase.</li>
+    <li><b>Cloudflare</b> - DNS proxy. SSL certs, DDOS protection, edge-caching, compression & minification.</li>
   </ul>
   Using Google firestore allows realtime updates on the user's dashboard via websockets.
 
